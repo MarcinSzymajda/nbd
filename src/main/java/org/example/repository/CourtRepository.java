@@ -8,8 +8,8 @@ import org.example.entity.Court;
 
 public class CourtRepository implements Repository<Court> {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-    EntityManager em = emf.createEntityManager();
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
+    private final EntityManager em = emf.createEntityManager();
 
     @Override
     public boolean add(Court obj) {
@@ -19,9 +19,6 @@ public class CourtRepository implements Repository<Court> {
             em.getTransaction().commit();
         } catch (Exception e) {
             return false;
-        } finally {
-            em.close();
-            emf.close();
         }
         return true;
     }
@@ -35,26 +32,26 @@ public class CourtRepository implements Repository<Court> {
             em.getTransaction().commit();
         } catch (Exception e) {
             return false;
-        } finally {
-            em.close();
-            emf.close();
         }
         return true;
     }
 
     @Override
-    public Court find(Court obj) {
+    public Court find(int id) {
         Court court;
         try {
             em.getTransaction().begin();
-            court = em.find(Court.class, obj);
+            court = em.find(Court.class, id);
             em.getTransaction().commit();
         } catch (Exception e) {
             return null;
-        } finally {
-            em.close();
-            emf.close();
         }
         return court;
+    }
+
+    @Override
+    public void close() throws Exception {
+        emf.close();
+        em.close();
     }
 }

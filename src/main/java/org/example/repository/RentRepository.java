@@ -7,11 +7,12 @@ import org.example.entity.Rent;
 
 public class RentRepository implements Repository<Rent>{
 
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
+    private final EntityManager em = emf.createEntityManager();
 
     @Override
     public boolean add(Rent obj) {
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager()) {
+        try {
             em.getTransaction().begin();
             em.persist(obj);
             em.getTransaction().commit();
@@ -23,8 +24,7 @@ public class RentRepository implements Repository<Rent>{
 
     @Override
     public boolean remove(int id) {
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager()) {
+        try {
             em.getTransaction().begin();
             Rent rent = em.find(Rent.class, id);
             em.remove(rent);
@@ -36,16 +36,21 @@ public class RentRepository implements Repository<Rent>{
     }
 
     @Override
-    public Rent find(Rent obj) {
+    public Rent find(int id) {
         Rent rent;
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager()) {
+        try  {
             em.getTransaction().begin();
-            rent = em.find(Rent.class, obj);
+            rent = em.find(Rent.class, id);
             em.getTransaction().commit();
         } catch (Exception e) {
             return null;
         }
         return rent;
+    }
+
+    @Override
+    public void close() throws Exception {
+        emf.close();
+        em.close();
     }
 }

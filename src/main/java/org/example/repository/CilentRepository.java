@@ -7,10 +7,12 @@ import org.example.entity.Client;
 
 public class CilentRepository implements Repository<Client> {
 
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
+    private final EntityManager em = emf.createEntityManager();
+
     @Override
     public boolean add(Client obj) {
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager())  {
+        try {
             em.getTransaction().begin();
             em.persist(obj);
             em.getTransaction().commit();
@@ -22,8 +24,7 @@ public class CilentRepository implements Repository<Client> {
 
     @Override
     public boolean remove(int id) {
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager()) {
+        try {
             em.getTransaction().begin();
             Client client = em.find(Client.class, id);
             em.remove(client);
@@ -35,16 +36,21 @@ public class CilentRepository implements Repository<Client> {
     }
 
     @Override
-    public Client find(Client obj) {
+    public Client find(int id) {
         Client client;
-        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-             EntityManager em = emf.createEntityManager()) {
+        try {
             em.getTransaction().begin();
-            client = em.find(Client.class, obj);
+            client = em.find(Client.class, id);
             em.getTransaction().commit();
         } catch (Exception e) {
             return null;
         }
         return client;
+    }
+
+    @Override
+    public void close() throws Exception {
+        emf.close();
+        em.close();
     }
 }
