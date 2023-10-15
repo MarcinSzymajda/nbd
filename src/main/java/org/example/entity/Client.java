@@ -7,18 +7,14 @@ import java.util.List;
 @Entity
 public class Client {
 
-    private String firstName;
-
-    private String lastName;
-
-    private String personalID;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clientID;
-
-//    @OneToMany(mappedBy = "client")
-//    private List<Rent> rents;
+    private String firstName;
+    private String lastName;
+    private String personalID;
+    @OneToMany(mappedBy = "client")
+    private List<Rent> rents;
 
     public Client(String firstName, String lastName, String personalID) {
         this.firstName = firstName;

@@ -13,7 +13,6 @@ public abstract class Court {
     private int courtID;
     private double width;
     private double length;
-
     private boolean isRented;
 
     public Court() {};

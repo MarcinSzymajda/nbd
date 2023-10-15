@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 @DiscriminatorValue("volleyball")
 public class VolleyballCourt extends Court {
 
-
     private double netLength;
     private double netWidth;
 
@@ -19,7 +18,6 @@ public class VolleyballCourt extends Court {
     }
 
     public VolleyballCourt() {
-
     }
 
     public double getNetLength() {

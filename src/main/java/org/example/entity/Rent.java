@@ -7,18 +7,14 @@ import java.util.Date;
 @Entity
 public class Rent {
 
-    private Date beginTime;
-
-    private Date endTime;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rentID;
-
+    private Date beginTime;
+    private Date endTime;
     @ManyToOne
     @JoinColumn
     private Court court;
-
     @ManyToOne
     @JoinColumn
     private Client client;
@@ -31,7 +27,6 @@ public class Rent {
     }
 
     public Rent() {
-
     }
 
     public Date getBeginTime() {

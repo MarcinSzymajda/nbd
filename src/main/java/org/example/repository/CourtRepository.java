@@ -30,8 +30,8 @@ public class CourtRepository implements Repository<Court> {
     public boolean remove(int id) {
         try {
             em.getTransaction().begin();
-            Client client = em.find(Client.class, id);
-            em.remove(client);
+            Court court = em.find(Court.class, id);
+            em.remove(court);
             em.getTransaction().commit();
         } catch (Exception e) {
             return false;

@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 public class BasketballCourt extends Court {
 
     private double basketHeight;
-
     private double basketRadius;
 
     public BasketballCourt(double width, double length, boolean isRented, double basketHeight, double basketRadius) {
