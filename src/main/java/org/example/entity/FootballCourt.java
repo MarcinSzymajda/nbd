@@ -20,10 +20,6 @@ public class FootballCourt extends Court {
     public FootballCourt() {
     }
 
-    public int getCourtId() {
-        return courtId;
-    }
-
     public double getGoalWidth() {
         return goalWidth;
     }
