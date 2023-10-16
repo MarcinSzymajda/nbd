@@ -14,6 +14,9 @@ public abstract class Court {
     private double width;
     private double length;
 
+    @Version
+    private int version;
+
     public Court() {};
 
     public Court(double width, double length) {
