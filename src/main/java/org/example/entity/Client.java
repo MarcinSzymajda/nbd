@@ -9,7 +9,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int clientID;
+    private int id;
     private String firstName;
     private String lastName;
     private String personalID;
@@ -37,7 +37,7 @@ public class Client {
         return personalID;
     }
 
-    public int getClientID() {
-        return clientID;
+    public int getId() {
+        return id;
     }
 }

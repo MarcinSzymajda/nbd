@@ -1,10 +1,9 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import org.example.entity.Client;
+import jakarta.persistence.*;
 import org.example.entity.Court;
+
+import java.util.List;
 
 public class CourtRepository implements Repository<Court> {
 
@@ -18,7 +17,7 @@ public class CourtRepository implements Repository<Court> {
             em.persist(obj);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return false;
+            throw new PersistenceException(e);
         }
         return true;
     }
@@ -31,7 +30,7 @@ public class CourtRepository implements Repository<Court> {
             em.remove(court);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return false;
+            throw new RollbackException(e);
         }
         return true;
     }
@@ -44,9 +43,23 @@ public class CourtRepository implements Repository<Court> {
             court = em.find(Court.class, id);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return null;
+            throw new EntityNotFoundException(e);
         }
         return court;
+    }
+
+    @Override
+    public List<Court> findAll() {
+        List<Court> courts;
+        try{
+            em.getTransaction().begin();
+            Query query = em.createQuery("select c from Court c");
+            courts = query.getResultList();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            throw new EntityNotFoundException(e);
+        }
+        return courts;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import jakarta.persistence.*;
 import org.example.entity.Client;
 
-public class CilentRepository implements Repository<Client> {
+import java.util.List;
+
+public class ClientRepository implements Repository<Client> {
 
     private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
     private final EntityManager em = emf.createEntityManager();
@@ -17,7 +17,7 @@ public class CilentRepository implements Repository<Client> {
             em.persist(obj);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return false;
+            throw new PersistenceException(e);
         }
         return true;
     }
@@ -30,7 +30,7 @@ public class CilentRepository implements Repository<Client> {
             em.remove(client);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return false;
+            throw new RollbackException(e);
         }
         return true;
     }
@@ -43,9 +43,23 @@ public class CilentRepository implements Repository<Client> {
             client = em.find(Client.class, id);
             em.getTransaction().commit();
         } catch (Exception e) {
-            return null;
+            throw new EntityNotFoundException(e);
         }
         return client;
+    }
+
+    @Override
+    public List<Client> findAll() {
+        List<Client> clients;
+        try {
+            em.getTransaction().begin();
+            Query query = em.createQuery("select c from Client c");
+            clients = query.getResultList();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            throw new EntityNotFoundException(e);
+        }
+        return clients;
     }
 
     @Override

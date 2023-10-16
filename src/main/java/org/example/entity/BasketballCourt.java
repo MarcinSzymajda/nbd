@@ -10,8 +10,8 @@ public class BasketballCourt extends Court {
     private double basketHeight;
     private double basketRadius;
 
-    public BasketballCourt(double width, double length, boolean isRented, double basketHeight, double basketRadius) {
-        super(width, length, isRented);
+    public BasketballCourt(double width, double length, double basketHeight, double basketRadius) {
+        super(width, length);
         this.basketHeight = basketHeight;
         this.basketRadius = basketRadius;
     }

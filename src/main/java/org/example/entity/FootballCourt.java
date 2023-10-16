@@ -11,8 +11,8 @@ public class FootballCourt extends Court {
     private double goalLength;
 
 
-    public FootballCourt(double width, double length, boolean isRented, double goalWidth, double goalLength) {
-        super(width, length, isRented);
+    public FootballCourt(double width, double length, double goalWidth, double goalLength) {
+        super(width, length);
         this.goalWidth = goalWidth;
         this.goalLength = goalLength;
     }

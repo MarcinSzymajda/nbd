@@ -10,32 +10,23 @@ public abstract class Court {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int courtID;
+    private int id;
     private double width;
     private double length;
-    private boolean isRented;
 
     public Court() {};
 
-    public Court(double width, double length,boolean isRented) {
+    public Court(double width, double length) {
         this.width = width;
         this.length = length;
-        this.isRented = isRented;
-
     }
 
-    public boolean isRented() {
-        return isRented;
+    public int getId() {
+        return id;
     }
-
-    public void setRented(boolean rented) {
-        isRented = rented;
-    }
-
     public double getWidth() {
         return width;
     }
-
     public double getLength() {
         return length;
     }
