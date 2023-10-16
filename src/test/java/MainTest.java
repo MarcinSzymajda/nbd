@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import java.time.LocalDateTime;
 
-
-
 public class MainTest {
     Client c1 = new Client("Marcin","Szymajda","123");
     Client c2 = new Client("Jakub","Osypiuk","456");
@@ -19,32 +17,37 @@ public class MainTest {
     Court co3 = new VolleyballCourt(15.2,13.2,1.25,15.0);
 
     @Test
-    public void rentRepoTest() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-        EntityManager firstTransaction = emf.createEntityManager();
-        EntityManager secondTransaction = emf.createEntityManager();
-        EntityManager em = emf.createEntityManager();
+    public void rentLockTest() {
+        try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
+             EntityManager firstManager = emf.createEntityManager();
+             EntityManager secondManager = emf.createEntityManager()) {
 
-        firstTransaction.getTransaction().begin();
-        secondTransaction.getTransaction().begin();
+            firstManager.getTransaction().begin();
+                 firstManager.persist(co1);
+                 firstManager.persist(c1);
+            firstManager.getTransaction().commit();
 
-        CourtRepository courtr = new CourtRepository();
-        Court court = courtr.find(1);
+            firstManager.getTransaction().begin();
+            secondManager.getTransaction().begin();
 
+                Court court1 = firstManager.find(Court.class, 1);
+                court1.setRented(true);
 
-        Rent rent = new Rent(court,c1, LocalDateTime.now());
-        Rent rent2 = new Rent(court,c2,LocalDateTime.now());
+                Court court2 = secondManager.find(Court.class, 1);
+                court2.setRented(true);
 
-        em.persist(rent);
-        em.persist(rent2);
+                Rent rent1 = new Rent(court1, c1, LocalDateTime.now());
+                Rent rent2 = new Rent(court2, c1, LocalDateTime.now());
 
-        Assertions.assertDoesNotThrow(() -> firstTransaction.getTransaction().commit());
+                firstManager.persist(rent1);
+                secondManager.persist(rent2);
 
-        RollbackException rbe = Assert.assertThrows(RollbackException.class,() -> secondTransaction.getTransaction().commit());
-        Assert.assertEquals(rbe.getCause(),OptimisticLockException.class);
-
-
+            Assertions.assertDoesNotThrow(() -> firstManager.getTransaction().commit());
+            RollbackException rbe = Assert.assertThrows(RollbackException.class, () -> secondManager.getTransaction().commit());
+            Assert.assertTrue(rbe.getCause() instanceof OptimisticLockException);
+        }
     }
+
     @Test
     public void courtRepoTest() {
         try (CourtRepository CourtRepo = new CourtRepository()) {
@@ -53,16 +56,10 @@ public class MainTest {
             Assert.assertTrue(CourtRepo.add(co3));
 
             Assert.assertEquals(CourtRepo.find(2),co2);
-
             Assert.assertEquals(CourtRepo.findAll().size(),3);
-
             Assert.assertTrue(CourtRepo.remove(2));
-
             Assert.assertEquals(CourtRepo.findAll().size(),2);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-
     }
 
     @Test
@@ -73,14 +70,9 @@ public class MainTest {
             Assert.assertTrue(ClientRepo.add(c3));
 
             Assert.assertEquals(ClientRepo.find(2),c2);
-
             Assert.assertEquals(ClientRepo.findAll().size(),3);
-
             Assert.assertTrue(ClientRepo.remove(2));
-
             Assert.assertEquals(ClientRepo.findAll().size(),2);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

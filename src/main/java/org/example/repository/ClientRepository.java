@@ -61,7 +61,7 @@ public class ClientRepository implements Repository<Client> {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IllegalStateException {
         emf.close();
         em.close();
     }

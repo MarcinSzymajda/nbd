@@ -85,7 +85,7 @@ public class RentRepository implements Repository<Rent>{
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IllegalStateException {
         emf.close();
         em.close();
     }
