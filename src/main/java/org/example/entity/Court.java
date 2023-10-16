@@ -13,9 +13,9 @@ public abstract class Court {
     private int id;
     private double width;
     private double length;
-
     @Version
     private int version;
+    private boolean isRented;
 
     public Court() {};
 
@@ -27,6 +27,15 @@ public abstract class Court {
     public int getId() {
         return id;
     }
+
+    public boolean isRented() {
+        return isRented;
+    }
+
+    public void setRented(boolean rented) {
+        isRented = rented;
+    }
+
     public double getWidth() {
         return width;
     }

@@ -16,10 +16,10 @@ public class ClientRepository implements Repository<Client> {
             em.getTransaction().begin();
             em.persist(obj);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
-            throw new PersistenceException(e);
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -29,37 +29,35 @@ public class ClientRepository implements Repository<Client> {
             Client client = em.find(Client.class, id);
             em.remove(client);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
-            throw new RollbackException(e);
+            return false;
         }
-        return true;
     }
 
     @Override
     public Client find(int id) {
-        Client client;
         try {
             em.getTransaction().begin();
-            client = em.find(Client.class, id);
+            Client client = em.find(Client.class, id);
             em.getTransaction().commit();
+            return client;
         } catch (Exception e) {
-            throw new EntityNotFoundException(e);
+            return null;
         }
-        return client;
     }
 
     @Override
     public List<Client> findAll() {
-        List<Client> clients;
         try {
             em.getTransaction().begin();
             Query query = em.createQuery("select c from Client c");
-            clients = query.getResultList();
+            List<Client> clients = query.getResultList();
             em.getTransaction().commit();
+            return clients;
         } catch (Exception e) {
-            throw new EntityNotFoundException(e);
+            return null;
         }
-        return clients;
     }
 
     @Override

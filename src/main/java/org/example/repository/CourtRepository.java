@@ -16,10 +16,10 @@ public class CourtRepository implements Repository<Court> {
             em.getTransaction().begin();
             em.persist(obj);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
-            throw new PersistenceException(e);
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -29,37 +29,35 @@ public class CourtRepository implements Repository<Court> {
             Court court = em.find(Court.class, id);
             em.remove(court);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
-            throw new RollbackException(e);
+            return false;
         }
-        return true;
     }
 
     @Override
     public Court find(int id) {
-        Court court;
         try {
             em.getTransaction().begin();
-            court = em.find(Court.class, id);
+            Court court = em.find(Court.class, id);
             em.getTransaction().commit();
+            return court;
         } catch (Exception e) {
-            throw new EntityNotFoundException(e);
+            return null;
         }
-        return court;
     }
 
     @Override
     public List<Court> findAll() {
-        List<Court> courts;
         try{
             em.getTransaction().begin();
             Query query = em.createQuery("select c from Court c");
-            courts = query.getResultList();
+            List<Court> courts = query.getResultList();
             em.getTransaction().commit();
+            return courts;
         } catch (Exception e) {
-            throw new EntityNotFoundException(e);
+            return null;
         }
-        return courts;
     }
 
     @Override

@@ -10,35 +10,30 @@ public class Rent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private LocalDateTime beginTime;
-    private LocalDateTime endTime;
     @ManyToOne
     @JoinColumn
     private Court court;
     @ManyToOne
     @JoinColumn
     private Client client;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
-    public Rent(LocalDateTime beginTime, LocalDateTime endTime, Court court, Client client) {
-        this.beginTime = beginTime;
-        this.endTime = endTime;
+    public Rent(Court court, Client client, LocalDateTime startTime) {
         this.court = court;
         this.client = client;
+        this.startTime = startTime;
     }
 
     public Rent() {
     }
 
-    public LocalDateTime getBeginTime() {
-        return beginTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Court getCourt() {
@@ -47,16 +42,5 @@ public class Rent {
 
     public Client getClient() {
         return client;
-    }
-
-    @Override
-    public String toString() {
-        return "Rent{" +
-                "rentID=" + id +
-                ", beginTime=" + beginTime +
-                ", endTime=" + endTime +
-                ", court=" + court +
-                ", client=" + client +
-                '}';
     }
 }
