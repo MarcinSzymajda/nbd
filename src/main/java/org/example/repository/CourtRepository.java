@@ -39,7 +39,7 @@ public class CourtRepository implements Repository<Court> {
     public Court find(int id) {
         try {
             em.getTransaction().begin();
-            Court court = em.find(Court.class, id);
+            Court court = em.find(Court.class, id,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             em.getTransaction().commit();
             return court;
         } catch (Exception e) {

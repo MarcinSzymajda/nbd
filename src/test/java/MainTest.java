@@ -1,8 +1,12 @@
+import jakarta.persistence.*;
 import org.example.entity.*;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import java.time.LocalDateTime;
+
 
 
 public class MainTest {
@@ -16,6 +20,29 @@ public class MainTest {
 
     @Test
     public void rentRepoTest() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
+        EntityManager firstTransaction = emf.createEntityManager();
+        EntityManager secondTransaction = emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
+
+        firstTransaction.getTransaction().begin();
+        secondTransaction.getTransaction().begin();
+
+        CourtRepository courtr = new CourtRepository();
+        Court court = courtr.find(1);
+
+
+        Rent rent = new Rent(court,c1, LocalDateTime.now());
+        Rent rent2 = new Rent(court,c2,LocalDateTime.now());
+
+        em.persist(rent);
+        em.persist(rent2);
+
+        Assertions.assertDoesNotThrow(() -> firstTransaction.getTransaction().commit());
+
+        RollbackException rbe = Assert.assertThrows(RollbackException.class,() -> secondTransaction.getTransaction().commit());
+        Assert.assertEquals(rbe.getCause(),OptimisticLockException.class);
+
 
     }
     @Test
