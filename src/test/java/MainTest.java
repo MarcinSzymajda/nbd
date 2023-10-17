@@ -2,6 +2,7 @@ import jakarta.persistence.*;
 import org.example.entity.*;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
+import org.example.repository.RentRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +46,42 @@ public class MainTest {
             Assertions.assertDoesNotThrow(() -> firstManager.getTransaction().commit());
             RollbackException rbe = Assert.assertThrows(RollbackException.class, () -> secondManager.getTransaction().commit());
             Assert.assertTrue(rbe.getCause() instanceof OptimisticLockException);
+
         }
+    }
+
+    @Test
+    public void rentRepoTest() {
+        try (RentRepository rentRepo = new RentRepository();
+             CourtRepository CourtRepo = new CourtRepository();
+             ClientRepository ClientRepo = new ClientRepository()) {
+
+        Rent rent1 = new Rent(co1, c1, LocalDateTime.now());
+        Rent rent2 = new Rent(co2, c2, LocalDateTime.now());
+        Rent rent3 = new Rent(co3, c3, LocalDateTime.now());
+
+        Assert.assertTrue(CourtRepo.add(co1));
+        Assert.assertTrue(CourtRepo.add(co2));
+        Assert.assertTrue(CourtRepo.add(co3));
+
+        Assert.assertTrue(ClientRepo.add(c1));
+        Assert.assertTrue(ClientRepo.add(c2));
+        Assert.assertTrue(ClientRepo.add(c3));
+
+
+        Assert.assertTrue(rentRepo.add(rent1));
+        Assert.assertTrue(rentRepo.add(rent2));
+        Assert.assertTrue(rentRepo.add(rent3));
+
+        Assert.assertEquals(rentRepo.find(1),rent1);
+        Assert.assertEquals(rentRepo.findAll().size(),3);
+        Assert.assertTrue(rentRepo.remove(1));
+        Assert.assertEquals(rentRepo.findAll().size(),2);
+        Assert.assertTrue(rentRepo.leave(3));
+        Assert.assertFalse(rentRepo.find(3).getCourt().isRented());
+
+        }
+
     }
 
     @Test
