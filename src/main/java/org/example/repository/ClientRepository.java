@@ -1,6 +1,9 @@
 package org.example.repository;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.example.entity.Client;
 
 import java.util.List;
@@ -18,6 +21,7 @@ public class ClientRepository implements Repository<Client> {
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -31,6 +35,7 @@ public class ClientRepository implements Repository<Client> {
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -40,11 +45,26 @@ public class ClientRepository implements Repository<Client> {
         try {
             em.getTransaction().begin();
             Client client = em.find(Client.class, id);
+            em.refresh(client);
             em.getTransaction().commit();
             return client;
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public boolean update(Client client) {
+        try {
+            em.getTransaction().begin();
+            em.merge(client);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return false;
+        }
+
     }
 
     @Override

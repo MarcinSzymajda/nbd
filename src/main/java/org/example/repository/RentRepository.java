@@ -1,10 +1,11 @@
 package org.example.repository;
 
-import jakarta.persistence.*;
-import org.example.entity.Court;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.example.entity.Rent;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class RentRepository implements Repository<Rent>{
@@ -13,35 +14,16 @@ public class RentRepository implements Repository<Rent>{
     private final EntityManager em = emf.createEntityManager();
 
     @Override
-    public boolean add(Rent obj) {
+    public boolean add(Rent rent) {
         try {
             em.getTransaction().begin();
-            Court court = em.find(Court.class, obj.getCourt().getId());
-
-            if (court.isRented()) {
-                em.getTransaction().rollback();
-                return false;
-            } else {
-                court.setRented(true);
-                em.persist(obj);
-                em.getTransaction().commit();
-                return true;
-            }
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean leave(int id) {
-        try {
-            em.getTransaction().begin();
-            Rent rent = em.find(Rent.class, id);
-            rent.getCourt().setRented(false);
-            rent.setEndTime(LocalDateTime.now());
+            em.merge(rent.getClient());
+            em.merge(rent.getCourt());
+            em.persist(rent);
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -55,6 +37,7 @@ public class RentRepository implements Repository<Rent>{
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -64,10 +47,26 @@ public class RentRepository implements Repository<Rent>{
         try {
             em.getTransaction().begin();
             Rent rent = em.find(Rent.class, id);
+            em.refresh(rent);
             em.getTransaction().commit();
             return rent;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Override
+    public boolean update(Rent rent) {
+        try {
+            em.getTransaction().begin();
+            em.merge(rent.getCourt());
+            em.merge(rent.getClient());
+            em.merge(rent);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return false;
         }
     }
 

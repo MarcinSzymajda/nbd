@@ -13,6 +13,7 @@ public class Client {
     private String firstName;
     private String lastName;
     private String personalID;
+    private boolean hasRent;
     @OneToMany(mappedBy = "client")
     private List<Rent> rents;
 
@@ -25,6 +26,12 @@ public class Client {
     public Client() {
     }
 
+    public boolean isHasRent() {
+        return hasRent;
+    }
+    public void setHasRent(boolean hasRent) {
+        this.hasRent = hasRent;
+    }
     public String getFirstName() {
         return firstName;
     }

@@ -17,11 +17,12 @@ public abstract class Court {
     private int version;
     private boolean isRented;
 
-    public Court() {};
-
     public Court(double width, double length) {
         this.width = width;
         this.length = length;
+    }
+
+    public Court() {
     }
 
     public int getId() {
@@ -35,7 +36,6 @@ public abstract class Court {
     public void setRented(boolean rented) {
         isRented = rented;
     }
-
     public double getWidth() {
         return width;
     }

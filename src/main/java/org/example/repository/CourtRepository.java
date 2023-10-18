@@ -1,6 +1,9 @@
 package org.example.repository;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.example.entity.Court;
 
 import java.util.List;
@@ -18,6 +21,7 @@ public class CourtRepository implements Repository<Court> {
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -31,6 +35,7 @@ public class CourtRepository implements Repository<Court> {
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -39,11 +44,25 @@ public class CourtRepository implements Repository<Court> {
     public Court find(int id) {
         try {
             em.getTransaction().begin();
-            Court court = em.find(Court.class, id,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            Court court = em.find(Court.class, id);
+            em.refresh(court);
             em.getTransaction().commit();
             return court;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Override
+    public boolean update(Court court) {
+        try {
+            em.getTransaction().begin();
+            em.merge(court);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return false;
         }
     }
 

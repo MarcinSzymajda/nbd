@@ -1,14 +1,17 @@
 import jakarta.persistence.*;
 import org.example.entity.*;
+import org.example.manager.RentManager;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
 import org.example.repository.RentRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+
 import java.time.LocalDateTime;
 
 public class MainTest {
+
     Client c1 = new Client("Marcin","Szymajda","123");
     Client c2 = new Client("Jakub","Osypiuk","456");
     Client c3 = new Client("Dominik","Marzec","123567");
@@ -51,42 +54,79 @@ public class MainTest {
     }
 
     @Test
+    public void businessLogicTest() {
+        try (RentManager rentManager = new RentManager(new RentRepository());
+             CourtRepository CourtRepo = new CourtRepository();
+             ClientRepository ClientRepo = new ClientRepository()) {
+
+            Rent rent = new Rent(co1, c1, LocalDateTime.now());
+            Rent forbiddenRent1 = new Rent(co2, c1, LocalDateTime.now());
+            Rent forbiddenRent2 = new Rent(co1, c2, LocalDateTime.now());
+
+            Assert.assertTrue(ClientRepo.add(c1));
+            Assert.assertTrue(ClientRepo.add(c2));
+
+            Assert.assertTrue(CourtRepo.add(co1));
+            Assert.assertTrue(CourtRepo.add(co2));
+
+            Assert.assertFalse(c1.isHasRent());
+            Assert.assertFalse(co1.isRented());
+
+            Assert.assertTrue(rentManager.add(rent));
+
+            Assert.assertTrue(c1.isHasRent());
+            Assert.assertTrue(co1.isRented());
+
+            Assert.assertFalse(rentManager.add(forbiddenRent1));
+            Assert.assertFalse(rentManager.add(forbiddenRent2));
+
+            Rent rentToLeave = rentManager.find(1);
+
+            Assert.assertTrue(rentManager.leave(rentToLeave));
+            Assert.assertTrue(c1.isHasRent());
+            Assert.assertTrue(co1.isRented());
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Test
     public void rentRepoTest() {
         try (RentRepository rentRepo = new RentRepository();
              CourtRepository CourtRepo = new CourtRepository();
              ClientRepository ClientRepo = new ClientRepository()) {
 
-        Rent rent1 = new Rent(co1, c1, LocalDateTime.now());
-        Rent rent2 = new Rent(co2, c2, LocalDateTime.now());
-        Rent rent3 = new Rent(co3, c3, LocalDateTime.now());
+            Rent rent1 = new Rent(co1, c1, LocalDateTime.now());
+            Rent rent2 = new Rent(co2, c2, LocalDateTime.now());
+            Rent rent3 = new Rent(co3, c3, LocalDateTime.now());
 
-        Assert.assertTrue(CourtRepo.add(co1));
-        Assert.assertTrue(CourtRepo.add(co2));
-        Assert.assertTrue(CourtRepo.add(co3));
+            Assert.assertTrue(CourtRepo.add(co1));
+            Assert.assertTrue(CourtRepo.add(co2));
+            Assert.assertTrue(CourtRepo.add(co3));
 
-        Assert.assertTrue(ClientRepo.add(c1));
-        Assert.assertTrue(ClientRepo.add(c2));
-        Assert.assertTrue(ClientRepo.add(c3));
+            Assert.assertTrue(ClientRepo.add(c1));
+            Assert.assertTrue(ClientRepo.add(c2));
+            Assert.assertTrue(ClientRepo.add(c3));
 
 
-        Assert.assertTrue(rentRepo.add(rent1));
-        Assert.assertTrue(rentRepo.add(rent2));
-        Assert.assertTrue(rentRepo.add(rent3));
+            Assert.assertTrue(rentRepo.add(rent1));
+            Assert.assertTrue(rentRepo.add(rent2));
+            Assert.assertTrue(rentRepo.add(rent3));
 
-        Assert.assertEquals(rentRepo.find(1),rent1);
-        Assert.assertEquals(rentRepo.findAll().size(),3);
-        Assert.assertTrue(rentRepo.remove(1));
-        Assert.assertEquals(rentRepo.findAll().size(),2);
-        Assert.assertTrue(rentRepo.leave(3));
-        Assert.assertFalse(rentRepo.find(3).getCourt().isRented());
-
+            Assert.assertEquals(rentRepo.find(1), rent1);
+            Assert.assertEquals(rentRepo.findAll().size(), 3);
+            Assert.assertTrue(rentRepo.remove(1));
+            Assert.assertEquals(rentRepo.findAll().size(), 2);
         }
-
     }
 
     @Test
     public void courtRepoTest() {
         try (CourtRepository CourtRepo = new CourtRepository()) {
+
             Assert.assertTrue(CourtRepo.add(co1));
             Assert.assertTrue(CourtRepo.add(co2));
             Assert.assertTrue(CourtRepo.add(co3));
@@ -101,6 +141,7 @@ public class MainTest {
     @Test
     public void clientRepoTest() {
         try (ClientRepository ClientRepo = new ClientRepository()) {
+
             Assert.assertTrue(ClientRepo.add(c1));
             Assert.assertTrue(ClientRepo.add(c2));
             Assert.assertTrue(ClientRepo.add(c3));
