@@ -1,9 +1,6 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import org.example.entity.Client;
 
 import java.util.List;
@@ -45,7 +42,6 @@ public class ClientRepository implements Repository<Client> {
         try {
             em.getTransaction().begin();
             Client client = em.find(Client.class, id);
-            em.refresh(client);
             em.getTransaction().commit();
             return client;
         } catch (Exception e) {

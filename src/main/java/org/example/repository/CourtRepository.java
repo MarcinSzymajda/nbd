@@ -1,9 +1,6 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import org.example.entity.Court;
 
 import java.util.List;
@@ -45,7 +42,6 @@ public class CourtRepository implements Repository<Court> {
         try {
             em.getTransaction().begin();
             Court court = em.find(Court.class, id);
-            em.refresh(court);
             em.getTransaction().commit();
             return court;
         } catch (Exception e) {

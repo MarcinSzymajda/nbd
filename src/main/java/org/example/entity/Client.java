@@ -13,6 +13,8 @@ public class Client {
     private String firstName;
     private String lastName;
     private String personalID;
+    @Version
+    private int version;
     private boolean hasRent;
     @OneToMany(mappedBy = "client")
     private List<Rent> rents;
