@@ -1,15 +1,11 @@
 package org.example.entity;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 
-@Entity
-@Access(AccessType.FIELD)
-@DiscriminatorValue("volleyball")
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 public class VolleyballCourt extends Court {
 
+    @BsonProperty("netLength")
     private double netLength;
     private double netWidth;
 

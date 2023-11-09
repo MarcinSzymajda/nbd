@@ -1,46 +1,62 @@
 package org.example.entity;
 
-import jakarta.persistence.*;
+
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class Rent {
+public class Rent extends AbstractEntityMgd {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @ManyToOne
-    @JoinColumn
+    @BsonProperty("court")
     private Court court;
-    @ManyToOne
-    @JoinColumn
+    @BsonProperty("client")
     private Client client;
+    @BsonProperty("startTime")
     private LocalDateTime startTime;
+    @BsonProperty("endTime")
     private LocalDateTime endTime;
 
-    public Rent(Court court, Client client, LocalDateTime startTime) {
+    @BsonCreator
+    public Rent(@BsonProperty("_id") int id,
+                @BsonProperty("court") Court court,
+                @BsonProperty("client") Client client,
+                @BsonProperty("startTime") LocalDateTime startTime) {
+        super(id);
         this.court = court;
         this.client = client;
         this.startTime = startTime;
-    }
-
-    public Rent() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 
     public Court getCourt() {
         return court;
     }
 
+    public void setCourt(Court court) {
+        this.court = court;
+    }
+
     public Client getClient() {
         return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }
