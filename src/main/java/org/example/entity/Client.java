@@ -1,52 +1,72 @@
 package org.example.entity;
 
-import jakarta.persistence.*;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.List;
 
-@Entity
-public class Client {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class Client extends AbstractEntityMgd{
+
+    @BsonProperty("firstName")
     private String firstName;
+    @BsonProperty("lastName")
     private String lastName;
+    @BsonProperty("personalId")
     private String personalID;
-    @Version
-    private int version;
+    @BsonProperty("hasRent")
     private boolean hasRent;
-    @OneToMany(mappedBy = "client")
+    @BsonProperty("rent")
     private List<Rent> rents;
 
-    public Client(String firstName, String lastName, String personalID) {
+    @BsonCreator
+    public Client(@BsonProperty("_id") int id,
+                  @BsonProperty("firstName") String firstName,
+                  @BsonProperty("lastName") String lastName,
+                  @BsonProperty("personalId") String personalID) {
+        super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
     }
 
-    public Client() {
-    }
-
-    public boolean isHasRent() {
-        return hasRent;
-    }
-    public void setHasRent(boolean hasRent) {
-        this.hasRent = hasRent;
-    }
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getPersonalID() {
         return personalID;
     }
 
-    public int getId() {
-        return id;
+    public void setPersonalID(String personalID) {
+        this.personalID = personalID;
+    }
+
+    public boolean isHasRent() {
+        return hasRent;
+    }
+
+    public void setHasRent(boolean hasRent) {
+        this.hasRent = hasRent;
+    }
+
+    public List<Rent> getRents() {
+        return rents;
+    }
+
+    public void setRents(List<Rent> rents) {
+        this.rents = rents;
     }
 }

@@ -1,32 +1,42 @@
 package org.example.entity;
 
-import jakarta.persistence.*;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
-@Access(AccessType.FIELD)
-public abstract class Court {
+public abstract class Court extends AbstractEntityMgd {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @BsonProperty("width")
     private double width;
+    @BsonProperty("length")
     private double length;
-    @Version
-    private int version;
+    @BsonProperty("isRented")
     private boolean isRented;
 
-    public Court(double width, double length) {
+
+    @BsonCreator
+    public Court(@BsonProperty("_id") int id,
+                 @BsonProperty("width") double width,
+                 @BsonProperty("length") double length) {
+        super(id);
         this.width = width;
         this.length = length;
     }
 
-    public Court() {
+
+    public double getWidth() {
+        return width;
     }
 
-    public int getId() {
-        return id;
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
 
     public boolean isRented() {
@@ -35,11 +45,5 @@ public abstract class Court {
 
     public void setRented(boolean rented) {
         isRented = rented;
-    }
-    public double getWidth() {
-        return width;
-    }
-    public double getLength() {
-        return length;
     }
 }

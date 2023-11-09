@@ -1,9 +1,5 @@
 package org.example.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
 import org.example.entity.Rent;
 
 import java.util.List;
