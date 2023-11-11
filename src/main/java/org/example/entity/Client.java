@@ -1,33 +1,32 @@
 package org.example.entity;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
-
 import java.util.List;
 
+public class Client{
 
-public class Client extends AbstractEntityMgd{
-
-    @BsonProperty("firstName")
+    private int id;
     private String firstName;
-    @BsonProperty("lastName")
     private String lastName;
-    @BsonProperty("personalId")
     private String personalID;
-    @BsonProperty("hasRent")
-    private boolean hasRent;
-    @BsonProperty("rent")
+    private int hasRent;
     private List<Rent> rents;
 
-    @BsonCreator
-    public Client(@BsonProperty("_id") int id,
-                  @BsonProperty("firstName") String firstName,
-                  @BsonProperty("lastName") String lastName,
-                  @BsonProperty("personalId") String personalID) {
-        super(id);
+    public Client(int id,
+                  String firstName,
+                  String lastName,
+                  String personalID) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -54,11 +53,11 @@ public class Client extends AbstractEntityMgd{
         this.personalID = personalID;
     }
 
-    public boolean isHasRent() {
+    public int getHasRent() {
         return hasRent;
     }
 
-    public void setHasRent(boolean hasRent) {
+    public void setHasRent(int hasRent) {
         this.hasRent = hasRent;
     }
 

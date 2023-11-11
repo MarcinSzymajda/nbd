@@ -1,13 +1,4 @@
 import org.example.entity.*;
-import org.example.manager.RentManager;
-import org.example.repository.ClientRepository;
-import org.example.repository.CourtRepository;
-import org.example.repository.RentRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-
-import java.time.LocalDateTime;
 
 public class MainTest {
 

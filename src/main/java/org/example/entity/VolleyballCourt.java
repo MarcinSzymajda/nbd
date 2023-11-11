@@ -1,20 +1,15 @@
 package org.example.entity;
 
-
-import org.bson.codecs.pojo.annotations.BsonProperty;
-
 public class VolleyballCourt extends Court {
 
-    @BsonProperty("netLength")
     private double netLength;
-    @BsonProperty("netLength")
     private double netWidth;
 
-    public VolleyballCourt(@BsonProperty("_id") int id,
-                           @BsonProperty("width") double width,
-                           @BsonProperty("length")  double length,
-                           @BsonProperty("netLength")  double netLength,
-                           @BsonProperty("netLength")  double netWidth) {
+    public VolleyballCourt(int id,
+                           double width,
+                           double length,
+                           double netLength,
+                           double netWidth) {
         super(id, width, length);
         this.netLength = netLength;
         this.netWidth = netWidth;

@@ -1,21 +1,15 @@
 package org.example.entity;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
-
 public class FootballCourt extends Court {
 
-    @BsonProperty("goalWidth")
     private double goalWidth;
-    @BsonProperty("goalLength")
     private double goalLength;
 
-    @BsonCreator
-    public FootballCourt(@BsonProperty("_id") int id,
-                         @BsonProperty("width") double width,
-                         @BsonProperty("length")  double length,
-                         @BsonProperty("goalWidth")  double goalWidth,
-                         @BsonProperty("goalLength")  double goalLength) {
+    public FootballCourt(int id,
+                         double width,
+                         double length,
+                         double goalWidth,
+                         double goalLength) {
         super(id, width, length);
         this.goalWidth = goalWidth;
         this.goalLength = goalLength;

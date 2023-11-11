@@ -1,26 +1,43 @@
 package org.example.repository;
 
-import org.example.entity.Rent;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import org.example.entityMgd.ClientMgd;
+import org.example.entityMgd.CourtMgd;
+import org.example.entityMgd.RentMgd;
 
-import java.util.List;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.inc;
+import static com.mongodb.client.model.Updates.set;
 
-public class RentRepository implements Repository<Rent>{
+public class RentRepository extends AbstractMongoRepository implements Repository<RentMgd>{
 
-
+    private final MongoCollection<RentMgd> rents = getDatabase().getCollection("rents", RentMgd.class);
+    private final MongoCollection<ClientMgd> clients = getDatabase().getCollection("clients", ClientMgd.class);
+    private final MongoCollection<CourtMgd> courts = getDatabase().getCollection("courts", CourtMgd.class);
     @Override
-    public boolean add(Rent rent) {
+    public boolean add(RentMgd rent) {
+        ClientSession clientSession = getMongoClient().startSession();
         try {
-
+            clientSession.startTransaction();
+            clients.updateOne(eq("_id", rent.getClient().getId()), inc("has_rent", 1));
+            courts.updateOne(eq("_id", rent.getCourt().getId()), inc("is_rented", 1));
+            rents.insertOne(rent);
+            clientSession.commitTransaction();
             return true;
         } catch (Exception e) {
+            clientSession.abortTransaction();
             return false;
+        } finally {
+            clientSession.close();
         }
     }
 
     @Override
     public boolean remove(int id) {
         try {
-
+            rents.findOneAndDelete(eq("_id", id));
             return true;
         } catch (Exception e) {
             return false;
@@ -28,9 +45,9 @@ public class RentRepository implements Repository<Rent>{
     }
 
     @Override
-    public Rent find(int id) {
+    public RentMgd find(int id) {
         try {
-
+            rents.find(eq("_id", id)).first();
             return null;
         } catch (Exception e) {
             return null;
@@ -38,9 +55,9 @@ public class RentRepository implements Repository<Rent>{
     }
 
     @Override
-    public boolean update(Rent rent) {
+    public boolean update(RentMgd rent) {
         try {
-
+            rents.replaceOne(eq("_id", rent.getId()), rent);
             return true;
         } catch (Exception e) {
             return false;
@@ -48,16 +65,16 @@ public class RentRepository implements Repository<Rent>{
     }
 
     @Override
-    public List<Rent> findAll() {
+    public FindIterable<RentMgd> findAll() {
         try {
-            return null;
+            return rents.find();
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public void close() throws Exception {
-
+    public void close() {
+        super.close();
     }
 }

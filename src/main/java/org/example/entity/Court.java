@@ -1,27 +1,28 @@
 package org.example.entity;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
+public abstract class Court {
 
-public abstract class Court extends AbstractEntityMgd {
-
-    @BsonProperty("width")
+    private int id;
     private double width;
-    @BsonProperty("length")
     private double length;
-    @BsonProperty("isRented")
-    private boolean isRented;
+    private int isRented;
 
 
-    @BsonCreator
-    public Court(@BsonProperty("_id") int id,
-                 @BsonProperty("width") double width,
-                 @BsonProperty("length") double length) {
-        super(id);
+    public Court(int id,
+                 double width,
+                 double length) {
+        this.id = id;
         this.width = width;
         this.length = length;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getWidth() {
         return width;
@@ -39,11 +40,11 @@ public abstract class Court extends AbstractEntityMgd {
         this.length = length;
     }
 
-    public boolean isRented() {
+    public int getIsRented() {
         return isRented;
     }
 
-    public void setRented(boolean rented) {
-        isRented = rented;
+    public void setIsRented(int isRented) {
+        this.isRented = isRented;
     }
 }

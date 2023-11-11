@@ -1,15 +1,19 @@
 package org.example.repository;
 
-import org.example.entity.Court;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import org.example.entityMgd.CourtMgd;
 
-import java.util.List;
+import static com.mongodb.client.model.Filters.eq;
 
-public class CourtRepository implements Repository<Court> {
+public class CourtRepository extends AbstractMongoRepository implements Repository<CourtMgd> {
 
+    private final MongoCollection<CourtMgd> courts = getDatabase().getCollection("courts", CourtMgd.class);
 
     @Override
-    public boolean add(Court obj) {
+    public boolean add(CourtMgd court) {
         try {
+            courts.insertOne(court);
             return true;
         } catch (Exception e) {
             return false;
@@ -19,6 +23,7 @@ public class CourtRepository implements Repository<Court> {
     @Override
     public boolean remove(int id) {
         try {
+            courts.findOneAndDelete(eq("_id", id));
             return true;
         } catch (Exception e) {
             return false;
@@ -26,17 +31,18 @@ public class CourtRepository implements Repository<Court> {
     }
 
     @Override
-    public Court find(int id) {
+    public CourtMgd find(int id) {
         try {
-            return null;
+            return courts.find(eq("_id", id)).first();
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public boolean update(Court court) {
+    public boolean update(CourtMgd court) {
         try {
+            courts.replaceOne(eq("_id", court.getId()), court);
             return true;
         } catch (Exception e) {
             return false;
@@ -44,15 +50,16 @@ public class CourtRepository implements Repository<Court> {
     }
 
     @Override
-    public List<Court> findAll() {
+    public FindIterable<CourtMgd> findAll() {
         try{
-            return null;
+            return courts.find();
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public void close() throws IllegalStateException {
+    public void close() {
+        super.close();
     }
 }

@@ -1,20 +1,27 @@
-package org.example.entity;
+package org.example.entityMgd;
 
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import java.time.LocalDateTime;
 
-public class Rent {
+public class RentMgd {
 
+    @BsonProperty("_id")
     private int id;
-    private Court court;
-    private Client client;
+    @BsonProperty("court")
+    private CourtMgd court;
+    @BsonProperty("client")
+    private ClientMgd client;
+    @BsonProperty("start_time")
     private LocalDateTime startTime;
+    @BsonProperty("end_time")
     private LocalDateTime endTime;
 
-    public Rent(int id,
-                Court court,
-                Client client,
-                LocalDateTime startTime) {
-        this.id = id;
+    @BsonCreator
+    public RentMgd(
+            @BsonProperty("court") CourtMgd court,
+            @BsonProperty("client") ClientMgd client,
+            @BsonProperty("start_time") LocalDateTime startTime) {
         this.court = court;
         this.client = client;
         this.startTime = startTime;
@@ -28,19 +35,19 @@ public class Rent {
         this.id = id;
     }
 
-    public Court getCourt() {
+    public CourtMgd getCourt() {
         return court;
     }
 
-    public void setCourt(Court court) {
+    public void setCourt(CourtMgd court) {
         this.court = court;
     }
 
-    public Client getClient() {
+    public ClientMgd getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(ClientMgd client) {
         this.client = client;
     }
 
