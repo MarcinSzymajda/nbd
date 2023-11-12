@@ -27,30 +27,6 @@ public class ClientMgd extends AbstractEntityMgd {
         this.personalID = personalID;
     }
 
-//    @BsonCreator
-//    public ClientMgd(
-//            @BsonProperty("_id") int id,
-//            @BsonProperty("first_name") String firstName,
-//            @BsonProperty("last_name") String lastName,
-//            @BsonProperty("personal_ID") String personalID,
-//            @BsonProperty("has_rent") int hasRent)
-//    {
-//        super(id);
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.personalID = personalID;
-//        this.hasRent = hasRent;
-//    }
-
-
-    public ClientMgd(int id, String firstName, String lastName, String personalID, int hasRent) {
-        super(id);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.personalID = personalID;
-        this.hasRent = hasRent;
-    }
-
     public String getFirstName() {
         return firstName;
     }

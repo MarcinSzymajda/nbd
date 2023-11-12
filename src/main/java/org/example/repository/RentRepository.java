@@ -7,6 +7,8 @@ import org.example.entityMgd.ClientMgd;
 import org.example.entityMgd.CourtMgd;
 import org.example.entityMgd.RentMgd;
 
+import java.time.LocalDateTime;
+
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.inc;
 import static com.mongodb.client.model.Updates.set;
@@ -22,7 +24,9 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
         try {
             clientSession.startTransaction();
             clients.updateOne(eq("_id", rent.getClient().getId()), inc("has_rent", 1));
+            rent.getClient().setHasRent(1);
             courts.updateOne(eq("_id", rent.getCourt().getId()), inc("is_rented", 1));
+            rent.getCourt().setIsRented(1);
             rents.insertOne(rent);
             clientSession.commitTransaction();
             return true;
@@ -47,8 +51,8 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     @Override
     public RentMgd find(int id) {
         try {
-            rents.find(eq("_id", id)).first();
-            return null;
+            RentMgd rentMgd = rents.find(eq("_id", id)).first();
+            return rentMgd;
         } catch (Exception e) {
             return null;
         }
@@ -70,6 +74,23 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
             return rents.find();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public boolean endRent(RentMgd rent) {
+        ClientSession clientSession = getMongoClient().startSession();
+        try {
+            clientSession.startTransaction();
+            clients.updateOne(eq("_id", rent.getClient().getId()), set("has_rent", 0));
+            courts.updateOne(eq("_id", rent.getCourt().getId()), set("is_rented", 0));
+            rents.updateOne(eq("_id", rent.getId()), set("end_time", LocalDateTime.now()));
+            clientSession.commitTransaction();
+            return true;
+        } catch (Exception e) {
+            clientSession.abortTransaction();
+            return false;
+        } finally {
+            clientSession.close();
         }
     }
 

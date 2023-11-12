@@ -25,6 +25,19 @@ public abstract class CourtMgd extends AbstractEntityMgd {
         this.length = length;
     }
 
+    @BsonCreator
+    public CourtMgd(
+            @BsonProperty("_id") int id,
+            @BsonProperty("width") double width,
+            @BsonProperty("length") double length,
+            @BsonProperty("is_rented") int isRented
+    ) {
+        super(id);
+        this.width = width;
+        this.length = length;
+        this.isRented = isRented;
+    }
+
     public double getWidth() {
         return width;
     }
@@ -41,11 +54,11 @@ public abstract class CourtMgd extends AbstractEntityMgd {
         this.length = length;
     }
 
-    public int isRented() {
+    public int getIsRented() {
         return isRented;
     }
 
-    public void setRented(int rented) {
-        isRented = rented;
+    public void setIsRented(int isRented) {
+        this.isRented = isRented;
     }
 }

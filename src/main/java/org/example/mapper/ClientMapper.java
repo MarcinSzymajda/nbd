@@ -20,13 +20,13 @@ public class ClientMapper {
                 .append(HAS_RENT, client.getHasRent());
     }
 
-    public static ClientMgd fromMongoClient(Document clientDocument) {
-        return new ClientMgd(
-                clientDocument.get(ID, Integer.class),
-                clientDocument.get(FIRST_NAME, String.class),
-                clientDocument.get(LAST_NAME, String.class),
-                clientDocument.get(PERSONAL_ID, String.class),
-                clientDocument.get(HAS_RENT, Integer.class)
-        );
-    }
+//    public static ClientMgd fromMongoClient(Document clientDocument) {
+//        return new ClientMgd(
+//                clientDocument.get(ID, Integer.class),
+//                clientDocument.get(FIRST_NAME, String.class),
+//                clientDocument.get(LAST_NAME, String.class),
+//                clientDocument.get(PERSONAL_ID, String.class),
+//                clientDocument.get(HAS_RENT, Integer.class)
+//        );
+//    }
 }

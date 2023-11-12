@@ -4,10 +4,8 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import java.time.LocalDateTime;
 
-public class RentMgd {
+public class RentMgd extends AbstractEntityMgd{
 
-    @BsonProperty("_id")
-    private int id;
     @BsonProperty("court")
     private CourtMgd court;
     @BsonProperty("client")
@@ -19,20 +17,14 @@ public class RentMgd {
 
     @BsonCreator
     public RentMgd(
+            @BsonProperty("_id") int id,
             @BsonProperty("court") CourtMgd court,
             @BsonProperty("client") ClientMgd client,
             @BsonProperty("start_time") LocalDateTime startTime) {
+        super(id);
         this.court = court;
         this.client = client;
         this.startTime = startTime;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public CourtMgd getCourt() {

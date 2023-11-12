@@ -24,6 +24,19 @@ public class FootballCourtMgd extends CourtMgd {
         this.goalLength = goalLength;
     }
 
+    @BsonCreator
+    public FootballCourtMgd(
+            @BsonProperty("_id") int id,
+            @BsonProperty("width") double width,
+            @BsonProperty("length") double length,
+            @BsonProperty("is_rented") int isRented,
+            @BsonProperty("goal_width") double goalWidth,
+            @BsonProperty("goal_length") double goalLength) {
+        super(id, width, length, isRented);
+        this.goalWidth = goalWidth;
+        this.goalLength = goalLength;
+    }
+
     public double getGoalWidth() {
         return goalWidth;
     }
