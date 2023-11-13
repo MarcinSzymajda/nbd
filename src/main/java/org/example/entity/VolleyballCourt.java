@@ -15,6 +15,17 @@ public class VolleyballCourt extends Court {
         this.netWidth = netWidth;
     }
 
+    public VolleyballCourt(int id,
+                           double width,
+                           double length,
+                           int isRented,
+                           double netLength,
+                           double netWidth) {
+        super(id, width, length);
+        this.netLength = netLength;
+        this.netWidth = netWidth;
+    }
+
     public double getNetLength() {
         return netLength;
     }

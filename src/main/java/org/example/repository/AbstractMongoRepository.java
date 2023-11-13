@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
@@ -18,7 +19,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public abstract class AbstractMongoRepository implements AutoCloseable {
-//    private  ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=replica_set_single");
+    private final ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=replica_set_single");
     private final MongoCredential credential = MongoCredential.createCredential(
             "admin",
             "admin",
@@ -38,7 +39,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     private void initDbConnection() {
         MongoClientSettings settings = MongoClientSettings.builder()
                 .credential(credential)
-//                .applyConnectionString(connectionString)
+                .applyConnectionString(connectionString)
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(CodecRegistries.fromRegistries(
                         MongoClientSettings.getDefaultCodecRegistry(),
@@ -54,6 +55,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
         if (!collectionExist("courts"))
             db.createCollection("courts", new CreateCollectionOptions().validationOptions(CourtValidationOptions.options));
     }
+
     public MongoDatabase getDatabase() {
         return db;
     }

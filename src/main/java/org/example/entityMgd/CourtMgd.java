@@ -18,17 +18,6 @@ public abstract class CourtMgd extends AbstractEntityMgd {
     public CourtMgd(
             @BsonProperty("_id") int id,
             @BsonProperty("width") double width,
-            @BsonProperty("length") double length
-    ) {
-        super(id);
-        this.width = width;
-        this.length = length;
-    }
-
-    @BsonCreator
-    public CourtMgd(
-            @BsonProperty("_id") int id,
-            @BsonProperty("width") double width,
             @BsonProperty("length") double length,
             @BsonProperty("is_rented") int isRented
     ) {

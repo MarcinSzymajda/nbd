@@ -16,6 +16,16 @@ public abstract class Court {
         this.length = length;
     }
 
+    public Court(int id,
+                 double width,
+                 double length,
+                 int isRented) {
+        this.id = id;
+        this.width = width;
+        this.length = length;
+        this.isRented = isRented;
+    }
+
     public int getId() {
         return id;
     }

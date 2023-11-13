@@ -18,6 +18,7 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     private final MongoCollection<RentMgd> rents = getDatabase().getCollection("rents", RentMgd.class);
     private final MongoCollection<ClientMgd> clients = getDatabase().getCollection("clients", ClientMgd.class);
     private final MongoCollection<CourtMgd> courts = getDatabase().getCollection("courts", CourtMgd.class);
+
     @Override
     public boolean add(RentMgd rent) {
         ClientSession clientSession = getMongoClient().startSession();

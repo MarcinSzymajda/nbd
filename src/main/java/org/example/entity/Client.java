@@ -21,6 +21,18 @@ public class Client{
         this.personalID = personalID;
     }
 
+    public Client(int id,
+                  String firstName,
+                  String lastName,
+                  String personalID,
+                  int hasRent) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalID = personalID;
+        this.hasRent = hasRent;
+    }
+
     public int getId() {
         return id;
     }

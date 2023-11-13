@@ -17,9 +17,10 @@ public class BasketballCourtMgd extends CourtMgd {
             @BsonProperty("_id") int id,
             @BsonProperty("width") double width,
             @BsonProperty("length") double length,
+            @BsonProperty("is_rented") int isRented,
             @BsonProperty("basket_height") double basketHeight,
             @BsonProperty("basket_radius") double basketRadius) {
-        super(id, width, length);
+        super(id, width, length, isRented);
         this.basketHeight = basketHeight;
         this.basketRadius = basketRadius;
     }

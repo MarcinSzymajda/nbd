@@ -15,6 +15,17 @@ public class BasketballCourt extends Court {
         this.basketRadius = basketRadius;
     }
 
+    public BasketballCourt(int id,
+                           double width,
+                           double length,
+                           int isRented,
+                           double basketHeight,
+                           double basketRadius) {
+        super(id, width, length, isRented);
+        this.basketHeight = basketHeight;
+        this.basketRadius = basketRadius;
+    }
+
     public double getBasketHeight() {
         return basketHeight;
     }

@@ -17,9 +17,10 @@ public class VolleyballCourtMgd extends CourtMgd {
             @BsonProperty("_id") int id,
             @BsonProperty("width") double width,
             @BsonProperty("length") double length,
+            @BsonProperty("is_rented") int isRented,
             @BsonProperty("net_length") double netLength,
             @BsonProperty("net_width") double netWidth) {
-        super(id, width, length);
+        super(id, width, length, isRented);
         this.netLength = netLength;
         this.netWidth = netWidth;
     }
@@ -39,4 +40,6 @@ public class VolleyballCourtMgd extends CourtMgd {
     public void setNetWidth(double netWidth) {
         this.netWidth = netWidth;
     }
+
+
 }
