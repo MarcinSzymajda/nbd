@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import java.util.Objects;
+
 public class VolleyballCourt extends Court {
 
     private double netLength;
@@ -24,6 +26,19 @@ public class VolleyballCourt extends Court {
         super(id, width, length);
         this.netLength = netLength;
         this.netWidth = netWidth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VolleyballCourt that = (VolleyballCourt) o;
+        return Double.compare(netLength, that.netLength) == 0 && Double.compare(netWidth, that.netWidth) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(netLength, netWidth);
     }
 
     public double getNetLength() {

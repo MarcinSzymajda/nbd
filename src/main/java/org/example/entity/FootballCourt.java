@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import java.util.Objects;
+
 public class FootballCourt extends Court {
 
     private double goalWidth;
@@ -40,5 +42,18 @@ public class FootballCourt extends Court {
 
     public void setGoalLength(double goalLength) {
         this.goalLength = goalLength;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FootballCourt that = (FootballCourt) o;
+        return Double.compare(goalWidth, that.goalWidth) == 0 && Double.compare(goalLength, that.goalLength) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(goalWidth, goalLength);
     }
 }
