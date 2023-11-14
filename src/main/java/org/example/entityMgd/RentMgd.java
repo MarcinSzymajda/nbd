@@ -2,7 +2,8 @@ package org.example.entityMgd;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 public class RentMgd extends AbstractEntityMgd{
 
@@ -11,20 +12,22 @@ public class RentMgd extends AbstractEntityMgd{
     @BsonProperty("client")
     private ClientMgd client;
     @BsonProperty("start_time")
-    private LocalDateTime startTime;
+    private Date startTime;
     @BsonProperty("end_time")
-    private LocalDateTime endTime;
+    private Date endTime;
 
     @BsonCreator
     public RentMgd(
             @BsonProperty("_id") int id,
             @BsonProperty("court") CourtMgd court,
             @BsonProperty("client") ClientMgd client,
-            @BsonProperty("start_time") LocalDateTime startTime) {
+            @BsonProperty("start_time") Date startTime,
+            @BsonProperty("end_time") Date endTime)  {
         super(id);
         this.court = court;
         this.client = client;
         this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public CourtMgd getCourt() {
@@ -43,19 +46,19 @@ public class RentMgd extends AbstractEntityMgd{
         this.client = client;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 }

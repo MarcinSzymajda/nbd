@@ -3,11 +3,15 @@ package org.example.repository;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.example.entityMgd.ClientMgd;
 import org.example.entityMgd.CourtMgd;
 import org.example.entityMgd.RentMgd;
+import org.example.mapper.RentMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.inc;
@@ -16,6 +20,7 @@ import static com.mongodb.client.model.Updates.set;
 public class RentRepository extends AbstractMongoRepository implements Repository<RentMgd>{
 
     private final MongoCollection<RentMgd> rents = getDatabase().getCollection("rents", RentMgd.class);
+    private final MongoCollection<Document> docRents = getDatabase().getCollection("rents");
     private final MongoCollection<ClientMgd> clients = getDatabase().getCollection("clients", ClientMgd.class);
     private final MongoCollection<CourtMgd> courts = getDatabase().getCollection("courts", CourtMgd.class);
 
@@ -24,11 +29,11 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
         ClientSession clientSession = getMongoClient().startSession();
         try {
             clientSession.startTransaction();
-            clients.updateOne(eq("_id", rent.getClient().getId()), inc("has_rent", 1));
+            clients.updateOne(clientSession, eq("_id", rent.getClient().getId()), inc("has_rent", 1));
+            courts.updateOne(clientSession, eq("_id", rent.getCourt().getId()), inc("is_rented", 1));
             rent.getClient().setHasRent(1);
-            courts.updateOne(eq("_id", rent.getCourt().getId()), inc("is_rented", 1));
             rent.getCourt().setIsRented(1);
-            rents.insertOne(rent);
+            rents.insertOne(clientSession, rent);
             clientSession.commitTransaction();
             return true;
         } catch (Exception e) {
@@ -42,7 +47,7 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     @Override
     public boolean remove(int id) {
         try {
-            rents.findOneAndDelete(eq("_id", id));
+            rents.deleteOne(eq("_id", id));
             return true;
         } catch (Exception e) {
             return false;
@@ -52,8 +57,8 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     @Override
     public RentMgd find(int id) {
         try {
-            RentMgd rentMgd = rents.find(eq("_id", id)).first();
-            return rentMgd;
+            Document rent = docRents.find(eq("_id", id)).first();
+            return rent != null ? RentMapper.toRentMgd(rent) : null;
         } catch (Exception e) {
             return null;
         }
@@ -70,9 +75,16 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     }
 
     @Override
-    public FindIterable<RentMgd> findAll() {
+    public List<RentMgd> findAll() {
         try {
-            return rents.find();
+            FindIterable<Document> documentRents = docRents.find();
+
+            List<RentMgd> mongoRents = new ArrayList<>();
+
+            for (Document rent : documentRents) {
+                mongoRents.add(RentMapper.toRentMgd(rent));
+            }
+            return mongoRents;
         } catch (Exception e) {
             return null;
         }
@@ -82,9 +94,9 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
         ClientSession clientSession = getMongoClient().startSession();
         try {
             clientSession.startTransaction();
-            clients.updateOne(eq("_id", rent.getClient().getId()), set("has_rent", 0));
-            courts.updateOne(eq("_id", rent.getCourt().getId()), set("is_rented", 0));
-            rents.updateOne(eq("_id", rent.getId()), set("end_time", LocalDateTime.now()));
+            clients.updateOne(clientSession, eq("_id", rent.getClient().getId()), set("has_rent", 0));
+            courts.updateOne(clientSession, eq("_id", rent.getCourt().getId()), set("is_rented", 0));
+            rents.updateOne(clientSession, eq("_id", rent.getId()), set("end_time", LocalDateTime.now()));
             clientSession.commitTransaction();
             return true;
         } catch (Exception e) {

@@ -10,5 +10,5 @@ public interface Repository<T> extends AutoCloseable{
     boolean remove(int id);
     T find(int id);
     boolean update(T obj);
-    FindIterable<T> findAll();
+    List<T> findAll();
 }

@@ -4,6 +4,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.example.entityMgd.ClientMgd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.mongodb.client.model.Filters.eq;
 
 public class ClientRepository extends AbstractMongoRepository implements Repository<ClientMgd> {
@@ -23,7 +26,7 @@ public class ClientRepository extends AbstractMongoRepository implements Reposit
     @Override
     public boolean remove(int id) {
         try {
-            clients.findOneAndDelete(eq("_id", id));
+            clients.deleteOne(eq("_id", id));
             return true;
         } catch (Exception e) {
             return false;
@@ -50,9 +53,16 @@ public class ClientRepository extends AbstractMongoRepository implements Reposit
     }
 
     @Override
-    public FindIterable<ClientMgd> findAll() {
+    public List<ClientMgd> findAll() {
         try {
-            return clients.find();
+            FindIterable<ClientMgd> mongoClientsMgd = clients.find();
+
+            List<ClientMgd> mongoClients = new ArrayList<>();
+
+            for (ClientMgd client : mongoClientsMgd) {
+                mongoClients.add(client);
+            }
+            return mongoClients;
         } catch (Exception e) {
             return null;
         }

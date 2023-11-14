@@ -1,23 +1,25 @@
 package org.example.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Rent {
 
     private int id;
     private Court court;
     private Client client;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Date startTime;
+    private Date endTime;
 
     public Rent(int id,
                 Court court,
                 Client client,
-                LocalDateTime startTime) {
+                Date startTime,
+                Date endTime) {
         this.id = id;
         this.court = court;
         this.client = client;
         this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public int getId() {
@@ -44,19 +46,19 @@ public class Rent {
         this.client = client;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 }
