@@ -18,7 +18,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public abstract class AbstractMongoRepository implements AutoCloseable {
-    private final ConnectionString connectionString = new ConnectionString("mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_single");
+    private final ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=replica_set_single");
     private final MongoCredential credential = MongoCredential.createCredential(
             "admin",
             "admin",
@@ -38,7 +38,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     private void initDbConnection() {
         MongoClientSettings settings = MongoClientSettings.builder()
                 .credential(credential)
-//                .applyConnectionString(connectionString)
+                .applyConnectionString(connectionString)
                 .codecRegistry(CodecRegistries.fromRegistries(
                         MongoClientSettings.getDefaultCodecRegistry(),
                         codecRegistry))

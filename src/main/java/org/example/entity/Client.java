@@ -1,7 +1,6 @@
 package org.example.entity;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Client{
 
@@ -80,18 +79,5 @@ public class Client{
 
     public void setRents(List<Rent> rents) {
         this.rents = rents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return id == client.id && hasRent == client.hasRent && Objects.equals(firstName, client.firstName) && Objects.equals(lastName, client.lastName) && Objects.equals(personalID, client.personalID) && Objects.equals(rents, client.rents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, personalID, hasRent, rents);
     }
 }
