@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+
 import java.util.Objects;
 
 public class VolleyballCourt extends Court {
@@ -17,6 +19,7 @@ public class VolleyballCourt extends Court {
         this.netWidth = netWidth;
     }
 
+    @JsonbCreator
     public VolleyballCourt(int id,
                            double width,
                            double length,
