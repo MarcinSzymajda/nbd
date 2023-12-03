@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+
 import java.util.Objects;
 
 public class BasketballCourt extends Court {
@@ -17,6 +19,7 @@ public class BasketballCourt extends Court {
         this.basketRadius = basketRadius;
     }
 
+    @JsonbCreator
     public BasketballCourt(int id,
                            double width,
                            double length,

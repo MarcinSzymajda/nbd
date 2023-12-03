@@ -1,5 +1,7 @@
 package org.example.entity;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+
 public abstract class Court {
 
     private int id;
@@ -16,6 +18,7 @@ public abstract class Court {
         this.length = length;
     }
 
+    @JsonbCreator
     public Court(int id,
                  double width,
                  double length,
