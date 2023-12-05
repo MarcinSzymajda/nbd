@@ -17,6 +17,8 @@ public class RedisTest {
     Court basketCourt = new BasketballCourt(2,1,1,1,1,1);
     Court volleyballCourt = new VolleyballCourt(3,1,1,1,1,1);
 
+    FootballCourt footballTestCourt = new FootballCourt(11,1,1,1,1,1);
+
     @Test
     public void addTest() {
 
@@ -53,6 +55,29 @@ public class RedisTest {
         }
     }
 
+    @Test
+    public void redisEfficientyTest() {
+        repository.addJson(footballTestCourt);
+
+        for(int i=0;i<200;i++) {
+            Court newCourt = repository.findJson(11);
+        }
+    }
+
+    @Test
+    public void mongoEfficientyTest() {
+
+        try(CourtRepository courtRepository = new CourtRepository()) {
+            courtRepository.add(CourtMapper.toMongoCourt(footballTestCourt));
+
+            for(int i=0;i<200;i++) {
+                Court newCourt = CourtMapper.fromMongoCourt(courtRepository.find(11));
+            }
+
+        } catch (Exception e) {
+
+        }
+    }
     @Test
     public void flushTest() {
         assertTrue(repository.deleteAllJson());
