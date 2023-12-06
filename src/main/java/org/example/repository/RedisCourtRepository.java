@@ -6,71 +6,66 @@ import org.example.entity.BasketballCourt;
 import org.example.entity.Court;
 import org.example.entity.FootballCourt;
 import org.example.entity.VolleyballCourt;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import redis.clients.jedis.*;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import org.example.mapper.CourtMapper;
+import redis.clients.jedis.params.SetParams;
 
-public class RedisCourtRepository {
+public class RedisCourtRepository extends AbstractRedisRepository {
 
-    private static JedisPooled jedis;
-    Jsonb jsonb = JsonbBuilder.create();
+    private final CourtRepository mongoCourtRepository = new CourtRepository();
+    private final Jsonb jsonb = JsonbBuilder.create();
     private final static String hashPrefix = "Court:";
-    
-    private final static String connString = null;
 
     public RedisCourtRepository() {
-        initConnection();
-    }
-
-    public void initConnection()  {
-        JSONParser parser = new JSONParser();
-
-        try (Reader reader = new FileReader("redisconf.json")) {
-
-            JSONObject jsonObject = (JSONObject) parser.parse(reader);
-
-            String host = (String) jsonObject.get("host");
-            String port = (String) jsonObject.get("port");
-
-            JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
-            jedis = new JedisPooled(new HostAndPort(host, Integer.parseInt(port)), clientConfig);
-
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
-
+        super();
     }
 
     public boolean addJson(Court court) {
-        String stringCourt = jsonb.toJson(court);
-        jedis.set(hashPrefix + court.getId(), stringCourt);
-        return true;
+        try {
+            String stringCourt = jsonb.toJson(court);
+            super.getJedis().set(hashPrefix + court.getId(), stringCourt, SetParams.setParams().ex(300));
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Court findJson(int id) {
-        String stringCourt = jedis.get(hashPrefix + id);
+        try {
+            String stringCourt =  super.getJedis().get(hashPrefix + id);
 
-        if (stringCourt == null) {
+            if (stringCourt == null) {
+                Court court = CourtMapper.fromMongoCourt(mongoCourtRepository.find(id));
+                if (court != null) {
+                    addJson(court);
+                    return court;
+                } else {
+                    return null;
+                }
+            }
+
+            if(stringCourt.contains("goal")) {
+                return jsonb.fromJson(stringCourt, FootballCourt.class);
+            }
+            if(stringCourt.contains("net")) {
+                return jsonb.fromJson(stringCourt, VolleyballCourt.class);
+            }
+            if(stringCourt.contains("basket")) {
+                return jsonb.fromJson(stringCourt, BasketballCourt.class);
+            }
             return null;
+
+        } catch (Exception e) {
+            return CourtMapper.fromMongoCourt(mongoCourtRepository.find(id));
         }
-        if(stringCourt.contains("goalWidth")) {
-           return jsonb.fromJson(stringCourt, FootballCourt.class);
-        }
-        if(stringCourt.contains("netWidth")) {
-            return jsonb.fromJson(stringCourt, VolleyballCourt.class);
-        }
-        if(stringCourt.contains("basketRadius")) {
-            return jsonb.fromJson(stringCourt, BasketballCourt.class);
-        }
-        return null;
     }
 
     public boolean deleteAllJson() {
-        jedis.flushAll();
-        return true;
+        try {
+            super.getJedis().flushAll();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -1,3 +1,5 @@
+package app;
+
 import org.example.entity.*;
 import org.example.entityMgd.*;
 import org.example.mapper.ClientMapper;

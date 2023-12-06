@@ -1,3 +1,5 @@
+package app;
+
 import org.example.entityMgd.ClientMgd;
 import org.example.entityMgd.CourtMgd;
 import org.example.entityMgd.FootballCourtMgd;

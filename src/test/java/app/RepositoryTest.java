@@ -1,3 +1,5 @@
+package app;
+
 import org.example.entityMgd.*;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
