@@ -7,6 +7,7 @@ import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public abstract class AbstractRedisRepository {
             JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
             jedis = new JedisPooled(new HostAndPort(host, Integer.parseInt(port)), clientConfig);
 
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | JedisConnectionException e) {
             throw new RuntimeException(e);
         }
     }

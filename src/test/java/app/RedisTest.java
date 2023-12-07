@@ -7,6 +7,7 @@ import org.example.entity.VolleyballCourt;
 import org.example.mapper.CourtMapper;
 import org.example.repository.CourtRepository;
 import org.example.repository.RedisCourtRepository;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -18,6 +19,10 @@ public class RedisTest {
     VolleyballCourt volleyballCourt = new VolleyballCourt(3,1,1,1,1,1);
     FootballCourt footballTestCourt = new FootballCourt(11,1,1,1,1,1);
 
+    @Before
+    public void setUp() throws Exception {
+        repository.deleteAllJson();
+    }
 
     @Test
     public void addTest() {
