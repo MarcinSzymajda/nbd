@@ -17,7 +17,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.inc;
 import static com.mongodb.client.model.Updates.set;
 
-public class RentRepository extends AbstractMongoRepository implements Repository<RentMgd>{
+public class RentMongoRepository extends AbstractMongoRepository implements Repository<RentMgd>{
 
     private final MongoCollection<RentMgd> rents = getDatabase().getCollection("rents", RentMgd.class);
     private final MongoCollection<Document> docRents = getDatabase().getCollection("rents");

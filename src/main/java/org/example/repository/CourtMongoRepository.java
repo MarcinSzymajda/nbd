@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class CourtRepository extends AbstractMongoRepository implements Repository<CourtMgd>{
+public class CourtMongoRepository extends AbstractMongoRepository implements Repository<CourtMgd>{
 
     private final MongoCollection<CourtMgd> courts = getDatabase().getCollection("courts", CourtMgd.class);
     private final MongoCollection<Document> docCourts = getDatabase().getCollection("courts");

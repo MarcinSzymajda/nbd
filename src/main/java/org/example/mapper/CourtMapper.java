@@ -51,8 +51,8 @@ public class CourtMapper {
                 footballCourt.getWidth(),
                 footballCourt.getLength(),
                 footballCourt.getIsRented(),
-                footballCourt.getGoalLength(),
-                footballCourt.getGoalWidth()
+                footballCourt.getGoalWidth(),
+                footballCourt.getGoalLength()
         );
     }
 
@@ -74,7 +74,7 @@ public class CourtMapper {
                 volleyballCourt.getLength(),
                 volleyballCourt.getIsRented(),
                 volleyballCourt.getNetLength(),
-                volleyballCourt.getWidth()
+                volleyballCourt.getNetWidth()
         );
     }
 

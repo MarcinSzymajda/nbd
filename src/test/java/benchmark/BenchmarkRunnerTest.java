@@ -17,5 +17,5 @@ public class BenchmarkRunnerTest {
                 .build();
 
         new Runner(opt).run();
-    };
+    }
 }

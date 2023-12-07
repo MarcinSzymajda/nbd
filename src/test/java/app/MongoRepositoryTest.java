@@ -1,9 +1,9 @@
 package app;
 
 import org.example.entityMgd.*;
-import org.example.repository.ClientRepository;
-import org.example.repository.CourtRepository;
-import org.example.repository.RentRepository;
+import org.example.repository.ClientMongoRepository;
+import org.example.repository.CourtMongoRepository;
+import org.example.repository.RentMongoRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +12,12 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RepositoryTest {
+public class MongoRepositoryTest {
 
-    private ClientRepository clientRepo = new ClientRepository();
+    private ClientMongoRepository clientRepo = new ClientMongoRepository();
     ;
-    private CourtRepository courtRepo = new CourtRepository();
-    private RentRepository rentRepo = new RentRepository();
+    private CourtMongoRepository courtRepo = new CourtMongoRepository();
+    private RentMongoRepository rentRepo = new RentMongoRepository();
     private ClientMgd clientMgd;
     private FootballCourtMgd footballMgd;
     private BasketballCourtMgd basketballMgd;

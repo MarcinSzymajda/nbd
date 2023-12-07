@@ -6,12 +6,10 @@ import org.example.entity.BasketballCourt;
 import org.example.entity.Court;
 import org.example.entity.FootballCourt;
 import org.example.entity.VolleyballCourt;
-import org.example.mapper.CourtMapper;
 import redis.clients.jedis.params.SetParams;
 
 public class RedisCourtRepository extends AbstractRedisRepository {
 
-    private final CourtRepository mongoCourtRepository = new CourtRepository();
     private final Jsonb jsonb = JsonbBuilder.create();
     private final static String hashPrefix = "Court:";
 
@@ -22,7 +20,7 @@ public class RedisCourtRepository extends AbstractRedisRepository {
     public boolean addJson(Court court) {
         try {
             String stringCourt = jsonb.toJson(court);
-            super.getJedis().set(hashPrefix + court.getId(), stringCourt, SetParams.setParams().ex(300));
+            super.getJedis().set(hashPrefix + court.getId(), stringCourt, SetParams.setParams().ex(180));
 
             return true;
         } catch (Exception e) {
@@ -35,13 +33,7 @@ public class RedisCourtRepository extends AbstractRedisRepository {
             String stringCourt =  super.getJedis().get(hashPrefix + id);
 
             if (stringCourt == null) {
-                Court court = CourtMapper.fromMongoCourt(mongoCourtRepository.find(id));
-                if (court != null) {
-                    addJson(court);
-                    return court;
-                } else {
-                    return null;
-                }
+                return null;
             }
 
             if(stringCourt.contains("goal")) {
@@ -56,7 +48,16 @@ public class RedisCourtRepository extends AbstractRedisRepository {
             return null;
 
         } catch (Exception e) {
-            return CourtMapper.fromMongoCourt(mongoCourtRepository.find(id));
+            return null;
+        }
+    }
+
+    public boolean deleteJson(int id) {
+        try {
+            super.getJedis().del(hashPrefix + id);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

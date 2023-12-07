@@ -9,16 +9,14 @@ import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Warmup(iterations = 0)
-@Measurement(iterations = 1)
+@Measurement(iterations = 1, timeUnit = TimeUnit.MICROSECONDS)
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
-
 public class RedisRepositoryReadFromCacheBenchmarkTest {
 
     RedisCourtRepository redisRepository = new RedisCourtRepository();
@@ -27,12 +25,11 @@ public class RedisRepositoryReadFromCacheBenchmarkTest {
     @Before
     public void setUp() throws Exception {
         assertTrue(redisRepository.addJson(footballCourt));
-        assertEquals(redisRepository.findJson(footballCourt.getId()), footballCourt);
     }
 
     @Test
     @Benchmark
     public void dataReadFromCacheBenchmark() {
-        Court fcourt = redisRepository.findJson(footballCourt.getId());
+        Court court = redisRepository.findJson(footballCourt.getId());
     }
 }

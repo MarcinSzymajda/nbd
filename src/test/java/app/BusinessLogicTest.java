@@ -5,9 +5,9 @@ import org.example.entityMgd.CourtMgd;
 import org.example.entityMgd.FootballCourtMgd;
 import org.example.entityMgd.RentMgd;
 import org.example.repository.AbstractMongoRepository;
-import org.example.repository.ClientRepository;
-import org.example.repository.CourtRepository;
-import org.example.repository.RentRepository;
+import org.example.repository.ClientMongoRepository;
+import org.example.repository.CourtMongoRepository;
+import org.example.repository.RentMongoRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class BusinessLogicTest {
 
     @Before
     public void setUp() {
-        try(AbstractMongoRepository repo = new ClientRepository()) {
+        try(AbstractMongoRepository repo = new ClientMongoRepository()) {
             repo.getDatabase().drop();
         }
     }
@@ -30,9 +30,9 @@ public class BusinessLogicTest {
         ClientMgd clientMgd = new ClientMgd(123, "Marek", "Blok","123234", 1);
         CourtMgd courtMgd = new FootballCourtMgd(123, 999, 999, 0, 999,43);
 
-        try(ClientRepository clientRepo  = new ClientRepository();
-            CourtRepository courtRepo = new CourtRepository();
-            RentRepository rentRepo = new RentRepository()) {
+        try(ClientMongoRepository clientRepo  = new ClientMongoRepository();
+            CourtMongoRepository courtRepo = new CourtMongoRepository();
+            RentMongoRepository rentRepo = new RentMongoRepository()) {
 
             assertTrue(clientRepo.add(clientMgd));
             assertTrue(courtRepo.add(courtMgd));
@@ -55,9 +55,9 @@ public class BusinessLogicTest {
         ClientMgd clientMgd = new ClientMgd(456, "Marek", "Blok","123234", 0);
         CourtMgd courtMgd = new FootballCourtMgd(456, 999, 999, 1, 999,43);
 
-        try(ClientRepository clientRepo  = new ClientRepository();
-            CourtRepository courtRepo = new CourtRepository();
-            RentRepository rentRepo = new RentRepository()) {
+        try(ClientMongoRepository clientRepo  = new ClientMongoRepository();
+            CourtMongoRepository courtRepo = new CourtMongoRepository();
+            RentMongoRepository rentRepo = new RentMongoRepository()) {
 
             assertTrue(clientRepo.add(clientMgd));
             assertTrue(courtRepo.add(courtMgd));
@@ -80,9 +80,9 @@ public class BusinessLogicTest {
         ClientMgd clientMgd = new ClientMgd(678, "Marek", "Blok","123234", 1);
         CourtMgd courtMgd = new FootballCourtMgd(678, 999, 999, 1, 999,43);
 
-        try(ClientRepository clientRepo  = new ClientRepository();
-            CourtRepository courtRepo = new CourtRepository();
-            RentRepository rentRepo = new RentRepository()) {
+        try(ClientMongoRepository clientRepo  = new ClientMongoRepository();
+            CourtMongoRepository courtRepo = new CourtMongoRepository();
+            RentMongoRepository rentRepo = new RentMongoRepository()) {
 
             assertTrue(clientRepo.add(clientMgd));
             assertTrue(courtRepo.add(courtMgd));

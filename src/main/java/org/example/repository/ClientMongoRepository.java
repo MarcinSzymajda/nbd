@@ -9,7 +9,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class ClientRepository extends AbstractMongoRepository implements Repository<ClientMgd> {
+public class ClientMongoRepository extends AbstractMongoRepository implements Repository<ClientMgd> {
 
     private final MongoCollection<ClientMgd> clients = getDatabase().getCollection("clients", ClientMgd.class);
 

@@ -4,20 +4,20 @@ import org.example.entity.BasketballCourt;
 import org.example.entity.Court;
 import org.example.entity.FootballCourt;
 import org.example.entity.VolleyballCourt;
-import org.example.mapper.CourtMapper;
-import org.example.repository.CourtRepository;
 import org.example.repository.RedisCourtRepository;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class RedisTest {
+public class RedisRepositoryTest {
     RedisCourtRepository repository = new RedisCourtRepository();
     FootballCourt footballCourt = new FootballCourt(1,1,1,1,1,1);
     BasketballCourt basketCourt = new BasketballCourt(2,1,1,1,1,1);
     VolleyballCourt volleyballCourt = new VolleyballCourt(3,1,1,1,1,1);
-    FootballCourt footballTestCourt = new FootballCourt(11,1,1,1,1,1);
+//    FootballCourt footballTestCourt = new FootballCourt(11,1,1,1,1,1);
+
+
 
     @Before
     public void setUp() throws Exception {
@@ -51,15 +51,24 @@ public class RedisTest {
         assertNull(nullCourt);
     }
 
-    // Needs to turn off redis container
-    @Test
-    public void lostConnectionToRedisTest() {
-        try(CourtRepository courtRepository = new CourtRepository()) {
-            courtRepository.add(CourtMapper.toMongoCourt(footballTestCourt));
+//    // Needs to turn off redis container
+//    @Test
+//    public void lostConnectionToRedisTest() {
+//        try(CourtMongoRepository courtRepository = new CourtMongoRepository()) {
+//            courtRepository.add(CourtMapper.toMongoCourt(footballTestCourt));
+//
+//            Court court = repository.findJson(11);
+//            assertEquals(court, footballTestCourt);
+//        }
+//    }
 
-            Court court = repository.findJson(11);
-            assertEquals(court, footballTestCourt);
-        }
+    @Test
+    public void deleteTest() {
+        assertTrue(repository.addJson(footballCourt));
+
+        assertTrue(repository.deleteJson(footballCourt.getId()));
+
+        assertNull(repository.findJson(footballCourt.getId()));
     }
 
     @Test
