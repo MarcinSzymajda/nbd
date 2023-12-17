@@ -1,63 +1,36 @@
 package org.example.entity;
 
-import jakarta.json.bind.annotation.JsonbCreator;
-
 public abstract class Court {
 
     private int id;
     private double width;
     private double length;
-    private int isRented;
+    private int version;
+    private boolean isRented;
 
-
-    public Court(int id,
-                 double width,
-                 double length) {
-        this.id = id;
+    public Court(double width, double length) {
         this.width = width;
         this.length = length;
     }
 
-    @JsonbCreator
-    public Court(int id,
-                 double width,
-                 double length,
-                 int isRented) {
-        this.id = id;
-        this.width = width;
-        this.length = length;
-        this.isRented = isRented;
+    public Court() {
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public void setLength(double length) {
-        this.length = length;
-    }
-
-    public int getIsRented() {
+    public boolean isRented() {
         return isRented;
     }
 
-    public void setIsRented(int isRented) {
-        this.isRented = isRented;
+    public void setRented(boolean rented) {
+        isRented = rented;
+    }
+    public double getWidth() {
+        return width;
+    }
+    public double getLength() {
+        return length;
     }
 }

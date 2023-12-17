@@ -1,83 +1,76 @@
 package org.example.entity;
 
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
+
 import java.util.List;
 
-public class Client{
 
+@Entity(defaultKeyspace = "clients")
+@CqlName("client")
+@PropertyStrategy(mutable = false)
+public class Client {
+
+    @PartitionKey
+    @CqlName("id")
     private int id;
+    @CqlName("hasrent")
+    private boolean hasRent;
+    @CqlName("firstname")
     private String firstName;
+    @CqlName("lastname")
     private String lastName;
+    @CqlName("personalid")
     private String personalID;
-    private int hasRent;
-    private List<Rent> rents;
+//    private List<Rent> rents;
 
-    public Client(int id,
-                  String firstName,
-                  String lastName,
-                  String personalID) {
+    public Client(int id, boolean hasRent, String firstName, String lastName, String personalID) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.personalID = personalID;
-    }
-
-    public Client(int id,
-                  String firstName,
-                  String lastName,
-                  String personalID,
-                  int hasRent) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.personalID = personalID;
         this.hasRent = hasRent;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalID = personalID;
     }
 
-    public int getId() {
-        return id;
+    public Client() {
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
+    public boolean isHasRent() {
+        return hasRent;
+    }
+//    public void setHasRent(boolean hasRent) {
+//        this.hasRent = hasRent;
+//    }
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getPersonalID() {
         return personalID;
     }
 
-    public void setPersonalID(String personalID) {
-        this.personalID = personalID;
+    public int getId() {
+        return id;
     }
 
-    public int getHasRent() {
-        return hasRent;
-    }
-
-    public void setHasRent(int hasRent) {
-        this.hasRent = hasRent;
-    }
-
-    public List<Rent> getRents() {
-        return rents;
-    }
-
-    public void setRents(List<Rent> rents) {
-        this.rents = rents;
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", hasRent=" + hasRent +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", personalID='" + personalID + '\'' +
+                '}';
     }
 }
