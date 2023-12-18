@@ -1,13 +1,15 @@
-package org.example.dao;
+package org.example.mapper;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.mapper.annotations.DaoFactory;
 import com.datastax.oss.driver.api.mapper.annotations.DaoKeyspace;
+import com.datastax.oss.driver.api.mapper.annotations.DaoTable;
 import com.datastax.oss.driver.api.mapper.annotations.Mapper;
+import org.example.dao.RentDao;
 
 @Mapper
-public interface InventoryMapper {
+public interface RentMapper {
 
     @DaoFactory
-    ClientDao clientDao(@DaoKeyspace CqlIdentifier keyspace);
+    RentDao rentDao(@DaoKeyspace CqlIdentifier keyspace, @DaoTable String table);
 }

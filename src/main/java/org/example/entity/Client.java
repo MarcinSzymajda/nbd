@@ -3,28 +3,24 @@ package org.example.entity;
 import com.datastax.oss.driver.api.mapper.annotations.CqlName;
 import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
-import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
-
-import java.util.List;
+import org.example.names.ClientIds;
 
 
-@Entity(defaultKeyspace = "clients")
-@CqlName("client")
-@PropertyStrategy(mutable = false)
+@Entity(defaultKeyspace = "rent_a_court")
+@CqlName("clients")
 public class Client {
 
     @PartitionKey
-    @CqlName("id")
+    @CqlName(ClientIds.ID)
     private int id;
-    @CqlName("hasrent")
+    @CqlName(ClientIds.HAS_RENT)
     private boolean hasRent;
-    @CqlName("firstname")
+    @CqlName(ClientIds.FIRST_NAME)
     private String firstName;
-    @CqlName("lastname")
+    @CqlName(ClientIds.LAST_NAME)
     private String lastName;
-    @CqlName("personalid")
+    @CqlName(ClientIds.PERSONAL_ID)
     private String personalID;
-//    private List<Rent> rents;
 
     public Client(int id, boolean hasRent, String firstName, String lastName, String personalID) {
         this.id = id;
@@ -37,16 +33,14 @@ public class Client {
     public Client() {
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public int getId() {
+        return id;
+    }
 
     public boolean isHasRent() {
         return hasRent;
     }
-//    public void setHasRent(boolean hasRent) {
-//        this.hasRent = hasRent;
-//    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -59,8 +53,24 @@ public class Client {
         return personalID;
     }
 
-    public int getId() {
-        return id;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setHasRent(boolean hasRent) {
+        this.hasRent = hasRent;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPersonalID(String personalID) {
+        this.personalID = personalID;
     }
 
     @Override

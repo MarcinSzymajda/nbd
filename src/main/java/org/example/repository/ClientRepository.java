@@ -1,29 +1,24 @@
 package org.example.repository;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.mapper.*;
-
 import org.example.dao.ClientDao;
-import org.example.dao.InventoryMapper;
-import org.example.dao.InventoryMapperBuilder;
 import org.example.entity.Client;
+import org.example.mapper.ClientMapper;
+import org.example.mapper.ClientMapperBuilder;
 
-import java.util.List;
-
-public class ClientRepository extends AbstractCassandraRepository {
+public class ClientRepository extends AbstractCassandraRepository implements Repository<Client> {
 
     private ClientDao clientDao;
 
     public ClientRepository() {
         super();
-        InventoryMapper inventoryMapper = new InventoryMapperBuilder(super.getSession()).build();
-        clientDao = inventoryMapper.clientDao(CqlIdentifier.fromCql("clients"));
+        ClientMapper clientMapper = new ClientMapperBuilder(super.getSession()).build();
+        clientDao = clientMapper.clientDao(CqlIdentifier.fromCql("rent_a_court"), "clients");
     }
 
-    public boolean add(Client obj) {
+    public boolean add(Client client) {
         try {
-            clientDao.save(obj);
+            clientDao.save(client);
             return true;
         } catch (Exception e) {
             return false;
@@ -46,29 +41,18 @@ public class ClientRepository extends AbstractCassandraRepository {
             return null;
         }
     }
-//
-//    @Override
-//    public boolean update(Client client) {
-//        try {
-//
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//
-//    }
-//
-//    @Override
-//    public List<Client> findAll() {
-//        try {
-//
-//            return null;
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public void close() throws IllegalStateException {
-//    }
+
+    public boolean update(Client client) {
+        try {
+            clientDao.save(client);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+    }
 }

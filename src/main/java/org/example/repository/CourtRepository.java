@@ -1,83 +1,58 @@
-package org.example.repository;//package org.example.repository;
-//
-//import jakarta.persistence.*;
-//import org.example.entity.Court;
-//
-//import java.util.List;
-//
-//public class CourtRepository implements Repository<Court> {
-//
-//    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("myapp");
-//    private final EntityManager em = emf.createEntityManager();
-//
-//    @Override
-//    public boolean add(Court obj) {
-//        try {
-//            em.getTransaction().begin();
-//            em.persist(obj);
-//            em.getTransaction().commit();
-//            return true;
-//        } catch (Exception e) {
-//            em.getTransaction().rollback();
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public boolean remove(int id) {
-//        try {
-//            em.getTransaction().begin();
-//            Court court = em.find(Court.class, id);
-//            em.remove(court);
-//            em.getTransaction().commit();
-//            return true;
-//        } catch (Exception e) {
-//            em.getTransaction().rollback();
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public Court find(int id) {
-//        try {
-//            em.getTransaction().begin();
-//            Court court = em.find(Court.class, id);
-//            em.getTransaction().commit();
-//            return court;
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public boolean update(Court court) {
-//        try {
-//            em.getTransaction().begin();
-//            em.merge(court);
-//            em.getTransaction().commit();
-//            return true;
-//        } catch (Exception e) {
-//            em.getTransaction().rollback();
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public List<Court> findAll() {
-//        try{
-//            em.getTransaction().begin();
-//            Query query = em.createQuery("select c from Court c");
-//            List<Court> courts = query.getResultList();
-//            em.getTransaction().commit();
-//            return courts;
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public void close() throws IllegalStateException {
-//        emf.close();
-//        em.close();
-//    }
-//}
+package org.example.repository;
+
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import org.example.dao.CourtDao;
+import org.example.entity.Court;
+import org.example.mapper.CourtMapper;
+import org.example.mapper.CourtMapperBuilder;
+
+
+public class CourtRepository extends AbstractCassandraRepository implements Repository<Court>{
+
+    private CourtDao courtDao;
+
+    public CourtRepository() {
+        CourtMapper courtMapper = new CourtMapperBuilder((super.getSession())).build();
+        courtDao = courtMapper.courtDao(CqlIdentifier.fromCql("rent_a_court"), "courts");
+    }
+
+    public boolean add(Court court) {
+        try {
+            courtDao.save(court);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean remove(int id) {
+        try {
+            courtDao.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Court find(int id) {
+        try {
+            return courtDao.findById(id);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean update(Court court) {
+        try {
+            courtDao.save(court);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+    }
+}
