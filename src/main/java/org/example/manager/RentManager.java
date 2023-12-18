@@ -5,11 +5,10 @@ import org.example.entity.Court;
 import org.example.entity.Rent;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
-import org.example.repository.RentRepository;
 
 public class RentManager implements AutoCloseable {
 
-    private final RentRepository rentRepository = new RentRepository();
+    private final org.example.repository.RentManager rentRepository = new org.example.repository.RentManager();
     private final ClientRepository clientRepository = new ClientRepository();
     private final CourtRepository courtRepository = new CourtRepository();
 

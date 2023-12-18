@@ -7,10 +7,10 @@ import org.example.entity.Rent;
 import org.example.mapper.RentMapper;
 import org.example.mapper.RentMapperBuilder;
 
-public class RentRepository extends AbstractCassandraRepository implements Repository<Rent>{
+public class RentManager extends AbstractCassandraRepository implements Repository<Rent>{
 
     private RentDao rentDao;
-    public RentRepository() {
+    public RentManager() {
         super();
         RentMapper rentMapper = new RentMapperBuilder(super.getSession()).build();
         rentDao = rentMapper.rentDao(CqlIdentifier.fromCql("rent_a_court"), "rents");
