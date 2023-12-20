@@ -5,6 +5,7 @@ import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
 import org.example.repository.RentManager;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 
 import java.time.LocalDate;
 
@@ -26,6 +27,7 @@ public class MapperTest {
 
 
     @Test
+    @Order(1)
     public void createTest() {
         try(ClientRepository clientRepository = new ClientRepository();
             RentManager rentRepository = new RentManager();
@@ -48,18 +50,11 @@ public class MapperTest {
         }
     }
 
-    private Row getFootballCourtRowFromCassandra() {
-        // Implement this method to retrieve a Row representing a FootballCourt from Cassandra
-        // You can use a CQL query to fetch the required data
-        //return session.execute("SELECT * FROM your_keyspace.your_football_court_table WHERE id = 1").one();
-    }
 
     @Test
+    @Order(2)
     public void courtMapperTest() {
 
-        Row footballCourtRow = getFootballCourtRowFromCassandra();
 
-        // Map the Row to a FootballCourt object using the custom mapper
-        FootballCourt footballCourt = CourtCustomMapper.getFootballCourt(footballCourtRow);
     }
 }

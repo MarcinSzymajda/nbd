@@ -3,6 +3,7 @@ import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
 import org.example.repository.RentManager;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 
 import java.time.LocalDate;
 
@@ -25,6 +26,7 @@ public class CRUDTest {
 
 
     @Test
+    @Order(1)
     public void createTest() {
         try(ClientRepository clientRepository = new ClientRepository();
             RentManager rentManager = new RentManager();
@@ -48,6 +50,7 @@ public class CRUDTest {
     }
 
     @Test
+    @Order(2)
     public void readTest() {
         try(ClientRepository clientRepository = new ClientRepository();
             RentManager rentManager = new RentManager();
@@ -73,6 +76,7 @@ public class CRUDTest {
     }
 
     @Test
+    @Order(3)
     public void updateTest() {
         try(ClientRepository clientRepository = new ClientRepository();
             RentManager rentRepository = new RentManager();
@@ -98,6 +102,7 @@ public class CRUDTest {
 
 
     @Test
+    @Order(4)
     public void deleteTest() {
         try(ClientRepository clientRepository = new ClientRepository();
             RentManager rentManager = new RentManager();
