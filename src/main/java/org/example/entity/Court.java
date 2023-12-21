@@ -6,6 +6,8 @@ import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 import org.example.names.CourtIds;
 
+import java.util.Objects;
+
 @Entity(defaultKeyspace = "rent_a_court")
 @CqlName("courts")
 @PropertyStrategy(mutable = false)
@@ -83,5 +85,18 @@ public class Court {
                 ", isRented=" + isRented +
                 ", discriminator='" + discriminator + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Court court = (Court) o;
+        return id == court.id && Double.compare(width, court.width) == 0 && Double.compare(length, court.length) == 0 && isRented == court.isRented && Objects.equals(discriminator, court.discriminator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, width, length, isRented, discriminator);
     }
 }

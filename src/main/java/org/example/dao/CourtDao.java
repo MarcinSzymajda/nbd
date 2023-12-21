@@ -10,18 +10,21 @@ import org.example.queryProvider.CourtQueryProvider;
 @Dao
 public interface CourtDao {
 
+    @StatementAttributes(consistencyLevel = "LOCAL_QUORUM")
     @QueryProvider(providerClass = CourtQueryProvider.class,
                    entityHelpers = {FootballCourt.class,
                                     BasketballCourt.class,
                                     VolleyballCourt.class})
     Court findById(int id);
 
+    @StatementAttributes(consistencyLevel = "LOCAL_QUORUM")
     @QueryProvider(providerClass = CourtQueryProvider.class,
                    entityHelpers = {FootballCourt.class,
                                     BasketballCourt.class,
                                     VolleyballCourt.class})
     void save(Court court);
 
+    @StatementAttributes(consistencyLevel = "LOCAL_QUORUM")
     @Delete(entityClass = Court.class)
     void deleteById(int id);
 }

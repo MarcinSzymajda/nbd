@@ -5,10 +5,11 @@ import org.example.entity.Court;
 import org.example.entity.Rent;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
+import org.example.repository.RentRepository;
 
 public class RentManager implements AutoCloseable {
 
-    private final org.example.repository.RentManager rentRepository = new org.example.repository.RentManager();
+    private final RentRepository rentRepository = new RentRepository();
     private final ClientRepository clientRepository = new ClientRepository();
     private final CourtRepository courtRepository = new CourtRepository();
 
@@ -31,7 +32,7 @@ public class RentManager implements AutoCloseable {
         Rent cRent = rentRepository.find(rent.getId());
 
         if (client != null && court != null && cRent != null) {
-            return rentRepository.end(rent);
+            return rentRepository.update(rent);
         }
 
         return false;

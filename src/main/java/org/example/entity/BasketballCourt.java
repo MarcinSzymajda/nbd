@@ -4,6 +4,8 @@ import com.datastax.oss.driver.api.mapper.annotations.CqlName;
 import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import org.example.names.CourtIds;
 
+import java.util.Objects;
+
 @Entity(defaultKeyspace = "rent_a_court")
 @CqlName("courts")
 public class BasketballCourt extends Court {
@@ -49,5 +51,19 @@ public class BasketballCourt extends Court {
                 ", basketHeight=" + basketHeight +
                 ", basketRadius=" + basketRadius +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BasketballCourt that = (BasketballCourt) o;
+        return Double.compare(basketHeight, that.basketHeight) == 0 && Double.compare(basketRadius, that.basketRadius) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), basketHeight, basketRadius);
     }
 }

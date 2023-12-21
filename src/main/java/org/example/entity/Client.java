@@ -5,6 +5,8 @@ import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import org.example.names.ClientIds;
 
+import java.util.Objects;
+
 
 @Entity(defaultKeyspace = "rent_a_court")
 @CqlName("clients")
@@ -82,5 +84,18 @@ public class Client {
                 ", lastName='" + lastName + '\'' +
                 ", personalID='" + personalID + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id && hasRent == client.hasRent && Objects.equals(firstName, client.firstName) && Objects.equals(lastName, client.lastName) && Objects.equals(personalID, client.personalID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, hasRent, firstName, lastName, personalID);
     }
 }

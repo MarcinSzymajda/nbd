@@ -1,24 +1,27 @@
 import org.example.entity.*;
 import org.example.repository.ClientRepository;
 import org.example.repository.CourtRepository;
-import org.example.repository.RentManager;
-import org.junit.Test;
+import org.example.repository.RentRepository;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CRUDTest {
 
-    Client c1 = new Client(1,false,"Marcin","Szymajda","123");
-    Client c2 = new Client(2,false,"Jakub","Osypiuk","456");
-    Client c3 = new Client(3,false,"Dominik","Marzec","123567");
+    Client c1 = new Client(1,true,"Marcin","Szymajda","123");
+    Client c2 = new Client(2,true,"Jakub","Osypiuk","456");
+    Client c3 = new Client(3,true,"Dominik","Marzec","123567");
 
-    FootballCourt footballCourt = new FootballCourt(100,1.1,1.1,1,1,false, "");
-    VolleyballCourt volleyballCourt = new VolleyballCourt(200,2.2,2.2,1,1,false, "");
-    BasketballCourt basketballCourt = new BasketballCourt(300,3.3,3.3,1,1,false, "");
+    FootballCourt footballCourt = new FootballCourt(100,1.1,1.1,1,1,true, "");
+    VolleyballCourt volleyballCourt = new VolleyballCourt(200,2.2,2.2,1,1,true, "");
+    BasketballCourt basketballCourt = new BasketballCourt(300,3.3,3.3,1,1,true, "");
 
     Rent r1 = new Rent(999,100,3, LocalDate.of(2022,10,10), null);
     Rent r2 = new Rent(899,200,2, LocalDate.of(2021,11,11), null);
@@ -29,7 +32,7 @@ public class CRUDTest {
     @Order(1)
     public void createTest() {
         try(ClientRepository clientRepository = new ClientRepository();
-            RentManager rentManager = new RentManager();
+            RentRepository rentRepository = new RentRepository();
             CourtRepository courtRepository = new CourtRepository()) {
 
             assertTrue(clientRepository.add(c1));
@@ -40,12 +43,9 @@ public class CRUDTest {
             assertTrue(courtRepository.add(basketballCourt));
             assertTrue(courtRepository.add(volleyballCourt));
 
-            assertTrue(rentManager.add(r1));
-            assertTrue(rentManager.add(r2));
-            assertTrue(rentManager.add(r3));
-
-        } catch(Exception e) {
-            return;
+            assertTrue(rentRepository.add(r1));
+            assertTrue(rentRepository.add(r2));
+            assertTrue(rentRepository.add(r3));
         }
     }
 
@@ -53,7 +53,7 @@ public class CRUDTest {
     @Order(2)
     public void readTest() {
         try(ClientRepository clientRepository = new ClientRepository();
-            RentManager rentManager = new RentManager();
+            RentRepository rentRepository = new RentRepository();
             CourtRepository courtRepository = new CourtRepository()) {
 
             assertEquals(clientRepository.find(c1.getId()),c1);
@@ -64,40 +64,36 @@ public class CRUDTest {
             assertEquals(courtRepository.find(basketballCourt.getId()),basketballCourt);
             assertEquals(courtRepository.find(volleyballCourt.getId()),volleyballCourt);
 
-            assertEquals(rentManager.find(r1.getId()),r1);
-            assertEquals(rentManager.find(r2.getId()),r2);
-            assertEquals(rentManager.find(r3.getId()),r3);
-
-
-        } catch (Exception e) {
-            return;
+            assertEquals(rentRepository.find(r1.getId()),r1);
+            assertEquals(rentRepository.find(r2.getId()),r2);
+            assertEquals(rentRepository.find(r3.getId()),r3);
         }
-
     }
 
     @Test
     @Order(3)
     public void updateTest() {
         try(ClientRepository clientRepository = new ClientRepository();
-            RentManager rentRepository = new RentManager();
+            RentRepository rentRepository = new RentRepository();
             CourtRepository courtRepository = new CourtRepository()) {
 
             //Marcin --> Mateusz
             c1.setFirstName("Mateusz");
             assertTrue(clientRepository.update(c1));
+            Client cc = clientRepository.find(1);
+            assertEquals(c1.getFirstName(), cc.getFirstName());
 
             //1.1 --> 1.67
             footballCourt.setGoalLength(1.67);
             assertTrue(courtRepository.update(footballCourt));
+            FootballCourt cf = (FootballCourt) courtRepository.find(100);
+            assertEquals(footballCourt.getGoalLength(), cf.getGoalLength(), 0.001);
 
-            // 2020-12-12 --> 2019-11-11
-            r1.setStartTime(LocalDate.of(2019,11,11));
+            //end rent and set EndTime to value different from null
             assertTrue(rentRepository.update(r1));
-
-        } catch (Exception e) {
-            return;
+            Rent cr = rentRepository.find(r1.getId());
+            assertNotNull(cr.getEndTime());
         }
-
     }
 
 
@@ -105,7 +101,7 @@ public class CRUDTest {
     @Order(4)
     public void deleteTest() {
         try(ClientRepository clientRepository = new ClientRepository();
-            RentManager rentManager = new RentManager();
+            RentRepository rentRepository = new RentRepository();
             CourtRepository courtRepository = new CourtRepository()) {
 
             assertTrue(clientRepository.remove(c1.getId()));
@@ -122,17 +118,13 @@ public class CRUDTest {
             assertNull(courtRepository.find(basketballCourt.getId()));
             assertNull(courtRepository.find(volleyballCourt.getId()));
 
-            assertTrue(rentManager.remove(r1.getId()));
-            assertTrue(rentManager.remove(r2.getId()));
-            assertTrue(rentManager.remove(r3.getId()));
-            assertNull(rentManager.find(r1.getId()));
-            assertNull(rentManager.find(r2.getId()));
-            assertNull(rentManager.find(r3.getId()));
-
-        } catch (Exception e) {
-            return;
+            assertTrue(rentRepository.remove(r1.getId()));
+            assertTrue(rentRepository.remove(r2.getId()));
+            assertTrue(rentRepository.remove(r3.getId()));
+            assertNull(rentRepository.find(r1.getId()));
+            assertNull(rentRepository.find(r2.getId()));
+            assertNull(rentRepository.find(r3.getId()));
         }
-
     }
 
 }

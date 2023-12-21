@@ -1,16 +1,15 @@
 package org.example.repository;
 
-
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import org.example.dao.RentDao;
 import org.example.entity.Rent;
 import org.example.mapper.RentMapper;
 import org.example.mapper.RentMapperBuilder;
 
-public class RentManager extends AbstractCassandraRepository implements Repository<Rent>{
+public class RentRepository extends AbstractCassandraRepository implements Repository<Rent>{
 
     private RentDao rentDao;
-    public RentManager() {
+    public RentRepository() {
         super();
         RentMapper rentMapper = new RentMapperBuilder(super.getSession()).build();
         rentDao = rentMapper.rentDao(CqlIdentifier.fromCql("rent_a_court"), "rents");
@@ -34,7 +33,7 @@ public class RentManager extends AbstractCassandraRepository implements Reposito
         }
     }
 
-    public boolean end(Rent rent) {
+    public boolean update(Rent rent) {
         try {
             rentDao.end(rent);
             return true;
@@ -48,16 +47,6 @@ public class RentManager extends AbstractCassandraRepository implements Reposito
             return rentDao.findById(id);
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    public boolean update(Rent rent) {
-        try {
-            rentDao.save(rent);
-            return true;
-        } catch (Exception e) {
-
-            return false;
         }
     }
 
