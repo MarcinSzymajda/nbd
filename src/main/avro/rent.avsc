@@ -1,0 +1,12 @@
+{"namespace": "org.example.kafka.record",
+ "type": "record",
+ "name": "Rent",
+ "fields": [
+     {"name": "id", "type": "int"},
+     {"name": "client_id", "type": "int"},
+     {"name": "court_id", "type": "int"},
+     {"name": "rental_name", "type": "string"},
+     {"name": "start_time",  "type": "string"},
+     {"name": "end_time", "type": ["string", "null"]}
+ ]
+}

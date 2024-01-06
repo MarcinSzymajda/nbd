@@ -5,20 +5,18 @@ import org.bson.Document;
 
 public class CourtValidationOptions {
     public static ValidationOptions options = new ValidationOptions().validator(
-            Document.parse("""
-                        {
-                          $jsonSchema: {
-                             bsonType: "object"
-                             properties: {
-                                is_rented: {
-                                   bsonType: "int",
-                                   minimum: 0,
-                                   maximum: 1,
-                                   description: "is_rented can have only value of 0 or 1"
-                                },
-                             }
-                          }
-                        }                           \s
-                    """)
+            Document.parse("    {\n" +
+                           "      $jsonSchema: {\n" +
+                           "         bsonType: \"object\"\n" +
+                           "         properties: {\n" +
+                           "            is_rented: {\n" +
+                           "               bsonType: \"int\",\n" +
+                           "               minimum: 0,\n" +
+                           "               maximum: 1,\n" +
+                           "               description: \"is_rented can have only value of 0 or 1\"\n" +
+                           "            },\n" +
+                           "         }\n" +
+                           "      }\n" +
+                           "    }                            \n")
     );
 }
