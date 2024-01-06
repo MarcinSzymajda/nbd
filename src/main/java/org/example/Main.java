@@ -1,49 +1,34 @@
 package org.example;
 
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.specific.SpecificDatumReader;
-import org.apache.avro.specific.SpecificDatumWriter;
-import org.example.kafka.record.Rent;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Rent rent = Rent.newBuilder()
-                .setId(1)
-                .setClientId(42)
-                .setCourtId(2)
-                .setRentalName("Super rental")
-                .setStartTime(sdf.format(new Date()))
-                .setEndTime(null)
-                .build();
 
-        DatumWriter<Rent> rentDatumWriter = new SpecificDatumWriter<Rent>(Rent.class);
+        String bootstrapServers = "kafka1:9190,kafka2:9191,kafka3:9192";
+        // create Producer properties
+        Properties properties = new Properties();
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(ProducerConfig.CLIENT_ID_CONFIG, "local");
+        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
 
-        try (DataFileWriter<Rent> dataFileWriter = new DataFileWriter<Rent>(rentDatumWriter)) {
-            dataFileWriter.create(rent.getSchema(), new File("xd.avro"));
-            dataFileWriter.append(rent);
-        }
+        KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-        System.out.println("Good");
+        ProducerRecord<String, String> producerRecord =
+                new ProducerRecord<>("first_topic", "hello world");
 
-        DatumReader<Rent> rentDatumReader = new SpecificDatumReader<Rent>(Rent.class);
+        producer.send(producerRecord);
 
-        try (DataFileReader<Rent> dataFileReader = new DataFileReader<Rent>(new File("xd.avro") ,rentDatumReader)) {
-            if (dataFileReader.hasNext()) {
-                Rent next = dataFileReader.next();
-                System.out.println(next);
-            }
-        }
-
-        while (true);
+        producer.close();
     }
 }
