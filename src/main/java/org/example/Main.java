@@ -1,18 +1,10 @@
 package org.example;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
+
 import org.example.entity.*;
 import org.example.kafka.Producer;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) {
@@ -33,8 +25,10 @@ public class Main {
 
         Rent rent = new Rent(1,footballCourt,client,currentDate,futureDate);
 
+        SimpleClass simpleClass = new SimpleClass(1, "super");
+
         Producer.initProducer();
-        Producer.sendRentToKafka(rent);
+        Producer.sendRentToKafka(simpleClass);
 
 
     }

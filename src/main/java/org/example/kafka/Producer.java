@@ -1,10 +1,12 @@
 package org.example.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.entity.SimpleClass;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.example.entity.Rent;
 import java.util.Properties;
@@ -27,13 +29,13 @@ public class Producer {
             producer = new KafkaProducer<>(producerConfig);
         }
 
-    public static void sendRentToKafka(Rent rent) {
+    public static void sendRentToKafka(SimpleClass rent) {
         ObjectMapper objectMapper = new ObjectMapper();
+
 
         try {
             String rentJson = objectMapper.writeValueAsString(rent);
             System.out.println(rentJson);
-
             ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", rentJson);
 
             producer.send(record);
