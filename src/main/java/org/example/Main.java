@@ -4,31 +4,38 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.entity.*;
+import org.example.kafka.Producer;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
+    public static void main(String[] args) {
 
 
-        String bootstrapServers = "kafka1:9190,kafka2:9191,kafka3:9192";
-        // create Producer properties
-        Properties properties = new Properties();
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.setProperty(ProducerConfig.CLIENT_ID_CONFIG, "local");
-        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        Date currentDate = new Date();
 
-        KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
 
-        ProducerRecord<String, String> producerRecord =
-                new ProducerRecord<>("first_topic", "hello world");
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
 
-        producer.send(producerRecord);
+        Date futureDate = calendar.getTime();
 
-        producer.close();
+        Client client = new Client(1,"marcin","szymajda","123",0);
+
+        FootballCourt footballCourt = new FootballCourt(456, 999, 999, 1, 999,43);
+
+        Rent rent = new Rent(1,footballCourt,client,currentDate,futureDate);
+
+        Producer.initProducer();
+        Producer.sendRentToKafka(rent);
+
+
     }
 }
