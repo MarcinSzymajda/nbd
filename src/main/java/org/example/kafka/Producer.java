@@ -9,6 +9,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaFuture;
+import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.example.entityKafka.RentKfk;
 
@@ -60,10 +61,16 @@ public class Producer {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            String rentKfkJson = objectMapper.writeValueAsString(rentKfk);
-            ProducerRecord<String, String> record = new ProducerRecord<>("court_rent", rentKfkJson);
 
-            producer.send(record);
+            String rentKfkJson = objectMapper.writeValueAsString(rentKfk);
+
+            List<PartitionInfo> partitions = producer.partitionsFor("court_rent");
+
+            for (PartitionInfo partition : partitions) {
+                String key = "partition_" + partition.partition();
+                ProducerRecord<String, String> record = new ProducerRecord<>("court_rent", key, rentKfkJson);
+                producer.send(record);
+            }
             producer.close();
         } catch (Exception e) {
             e.printStackTrace();
