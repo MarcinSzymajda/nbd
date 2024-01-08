@@ -30,6 +30,7 @@ public class Producer {
         producerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
         producerConfig.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
+
         producer = new KafkaProducer<>(producerConfig);
     }
 

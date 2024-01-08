@@ -3,10 +3,12 @@ package org.example.repository;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.bson.Document;
 import org.example.entityMgd.ClientMgd;
 import org.example.entityMgd.CourtMgd;
 import org.example.entityMgd.RentMgd;
+import org.example.kafka.Producer;
 import org.example.mapper.RentMapper;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,9 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
     public boolean add(RentMgd rent) {
         ClientSession clientSession = getMongoClient().startSession();
         try {
+            Producer producer = new Producer();
+
+            producer.initProducer();
             clientSession.startTransaction();
             clients.updateOne(clientSession, eq("_id", rent.getClient().getId()), inc("has_rent", 1));
             courts.updateOne(clientSession, eq("_id", rent.getCourt().getId()), inc("is_rented", 1));
@@ -35,6 +40,7 @@ public class RentRepository extends AbstractMongoRepository implements Repositor
             rent.getCourt().setIsRented(1);
             rents.insertOne(clientSession, rent);
             clientSession.commitTransaction();
+            producer.sendRentToKafka(RentMapper.toRentKfk(rent));
             return true;
         } catch (Exception e) {
             clientSession.abortTransaction();

@@ -2,6 +2,7 @@ package org.example.mapper;
 
 import org.bson.Document;
 import org.example.entity.Rent;
+import org.example.entityKafka.RentKfk;
 import org.example.entityMgd.RentMgd;
 
 import java.time.LocalDateTime;
@@ -42,6 +43,17 @@ public class RentMapper {
                 ClientMapper.toClientMgd((Document) rentDocument.get(CLIENT)),
                 rentDocument.get(START_TIME, Date.class),
                 rentDocument.get(END_TIME, Date.class)
+        );
+    }
+
+    public static RentKfk toRentKfk(RentMgd rentMgd) {
+        return new RentKfk(
+                rentMgd.getId(),
+                "lodz_rental",
+                rentMgd.getCourt().getId(),
+                rentMgd.getClient().getId(),
+                rentMgd.getStartTime(),
+                rentMgd.getEndTime()
         );
     }
 }
