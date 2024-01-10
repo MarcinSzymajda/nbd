@@ -14,6 +14,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.example.entityKafka.RentKfk;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -49,7 +50,7 @@ public class Producer implements AutoCloseable{
                     .timeoutMs(1000)
                     .validateOnly(false)
                     .retryOnQuotaViolation(true);
-            CreateTopicsResult result = admin.createTopics(Arrays.asList(newTopic), options);
+            CreateTopicsResult result = admin.createTopics(Collections.singletonList(newTopic), options);
             KafkaFuture<Void> futureResult = result.values().get("court_rent");
             futureResult.get();
         } catch (ExecutionException ee) {
@@ -65,12 +66,14 @@ public class Producer implements AutoCloseable{
             String rentKfkJson = objectMapper.writeValueAsString(rentKfk);
 
             List<PartitionInfo> partitions = producer.partitionsFor("court_rent");
+            int i=0;
 
             for (PartitionInfo partition : partitions) {
                 String key = "partition_" + partition.partition();
-                System.out.println(key);
-                ProducerRecord<String, String> record = new ProducerRecord<>("court_rent", key, rentKfkJson);
+                System.out.println("Sending record to: " + key);
+                ProducerRecord<String, String> record = new ProducerRecord<>("court_rent", i, key, rentKfkJson);
                 producer.send(record);
+                i++;
             }
 
         } catch (Exception e) {
