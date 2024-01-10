@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-public class Producer {
+public class Producer implements AutoCloseable{
     private KafkaProducer<String, String> producer;
 
     public void initProducer() {
@@ -68,13 +68,19 @@ public class Producer {
 
             for (PartitionInfo partition : partitions) {
                 String key = "partition_" + partition.partition();
+                System.out.println(key);
                 ProducerRecord<String, String> record = new ProducerRecord<>("court_rent", key, rentKfkJson);
                 producer.send(record);
             }
-            producer.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void close() {
+        producer.close();
     }
 }
 
